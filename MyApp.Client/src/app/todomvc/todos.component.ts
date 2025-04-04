@@ -72,7 +72,6 @@ export class TodoMvcComponent implements OnInit {
     toggleCompleted(todo: Todo): void {
         this.client.api(new UpdateTodo({ ...todo, isFinished: !todo.isFinished })).subscribe({
             next: (updated) => {
-                console.log('Updated todo:', updated);
                 const index = this.todos.findIndex(t => t.id === updated.id);
                 if (index !== -1) {
                     this.todos[index] = updated;
