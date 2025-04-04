@@ -1,0 +1,116 @@
+<app-page title="Todos Application" class="max-w-lg">
+    <div class="px-6 py-4">
+        <!-- Loading and Error States -->
+        @if (loading) {
+        <div class="flex justify-center mb-4">
+            <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
+        </div>
+        }
+        @if (error) {
+        <error-summary [status]="error"></error-summary>
+        }
+
+        <!-- New Todo Input -->
+        <div class="flex items-center border-b border-gray-300 py-2 mb-4">
+            @if (todos.length > 0) {
+            <button (click)="toggleAll(!allCompleted)"
+                class="cursor-pointer flex-shrink-0 mr-2 text-gray-500 hover:text-gray-700">
+                <svg class="h-5 w-5" [class.text-green-500]="allCompleted" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            }
+            <input [(ngModel)]="newTodoText" (keyup.enter)="addTodo()" placeholder="What needs to be done?"
+                class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                type="text">
+        </div>
+
+        @if (filteredTodos.length > 0) {
+        <!-- Todo List -->
+        <ul class="divide-y divide-gray-200">
+            @for (todo of filteredTodos; track todo.id) {
+            <li class="py-3 flex items-center group">
+                <div (click)="toggleCompleted(todo)"
+                    class="flex-shrink-0 h-5 w-5 border border-gray-300 rounded-full mr-3 cursor-pointer"
+                    [class.bg-green-500]="todo.isFinished" [class.border-green-500]="todo.isFinished">
+                    @if (todo.isFinished) {
+                    <svg class="h-full w-full text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                        </path>
+                    </svg>
+                    }
+                </div>
+
+                @if (editingTodoId !== todo.id) {
+                <!-- Todo Text (View Mode) -->
+                <div class="flex-1" [class.text-gray-400]="todo.isFinished" [class.line-through]="todo.isFinished"
+                    (dblclick)="startEditing(todo)">
+                    {{ todo.text }}
+                </div>
+                }
+                @else {
+                <!-- Todo Text (Edit Mode) -->
+                <input [(ngModel)]="editingTodoText" (blur)="doneEditing(todo)" (keyup.enter)="doneEditing(todo)"
+                    (keyup.escape)="cancelEditing()"
+                    class="flex-1 appearance-none bg-transparent border border-gray-300 rounded py-1 px-2 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
+                    type="text" #editTodoInput>
+                }
+
+                <!-- Delete Button -->
+                <button (click)="deleteTodo(todo.id)"
+                    class="cursor-pointer opacity-0 group-hover:opacity-100 flex-shrink-0 ml-2 text-gray-400 hover:text-red-500 transition-opacity duration-200">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </li>
+            }
+        </ul>
+        }
+
+        @if (todos.length === 0 && !loading) {
+        <!-- Empty State -->
+        <div class="py-6 text-center text-gray-500">
+            <p>No todos yet. Add one above!</p>
+        </div>
+        }
+
+        @if (todos.length > 0) {
+        <!-- Footer -->
+        <div class="flex items-center justify-between mt-4 text-sm text-gray-500 gap-x-4">
+            <span>{{ itemsLeftText }}</span>
+
+            <div class="flex space-x-1">
+                <button (click)="filter = 'all'" class="cursor-pointer px-3 py-1 rounded"
+                    [class.bg-gray-200]="filter === 'all'" [class.font-medium]="filter === 'all'">
+                    All
+                </button>
+                <button (click)="filter = 'active'" class="cursor-pointer px-3 py-1 rounded"
+                    [class.bg-gray-200]="filter === 'active'" [class.font-medium]="filter === 'active'">
+                    Active
+                </button>
+                <button (click)="filter = 'completed'" class="cursor-pointer px-3 py-1 rounded"
+                    [class.bg-gray-200]="filter === 'completed'" [class.font-medium]="filter === 'completed'">
+                    Completed
+                </button>
+            </div>
+
+            @if (completedCount > 0) {
+            <button (click)="clearCompleted()" class="cursor-pointer hover:underline">
+                Clear completed
+            </button>
+            }
+            @else {
+            <span></span> <!-- Empty span to maintain layout -->
+            }
+        </div>
+        }
+    </div>
+
+
+    <div class="mt-8 flex justify-center gap-x-4">
+        <src-page path="todomvc/todos.component.html"></src-page>
+    </div>
+</app-page>

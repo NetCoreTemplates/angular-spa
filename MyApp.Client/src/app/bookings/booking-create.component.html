@@ -1,0 +1,56 @@
+<app-page title="Create Booking">
+
+    <error-summary except="name,roomType,roomNumber,cost,bookingStartDate,notes"></error-summary>
+
+    <form class="grid gap-4 py-4" (ngSubmit)="save()">
+        <input class="hidden" type="submit" />
+        <fieldset [disabled]="api.loading()">
+            <error-summary except="name,roomType,roomNumber,cost,bookingStartDate,notes" class="mb-4"></error-summary>
+            <div class="grid grid-cols-6 gap-6">
+                <div class="col-span-6 sm:col-span-3">
+                    <text-input id="name" name="name" required placeholder="Name for this booking"
+                        [(ngModel)]="booking().name"></text-input>
+                </div>
+                <div class="col-span-6 sm:col-span-3">
+                    <select-input id="roomType" name="roomType" [options]="meta.enumOptions('RoomType')"
+                        [(ngModel)]="booking().roomType"></select-input>
+                </div>
+                <div class="col-span-6 sm:col-span-3">
+                    <text-input type="number" id="roomNumber" name="roomNumber" min="0" required
+                        [(ngModel)]="booking().roomNumber"></text-input>
+                </div>
+                <div class="col-span-6 sm:col-span-3">
+                    <text-input type="number" id="cost" name="cost" min="0" required
+                        [(ngModel)]="booking().cost"></text-input>
+                </div>
+                <div class="col-span-6 sm:col-span-3">
+                    <text-input type="date" id="bookingStartDate" name="bookingStartDate" required
+                        [(ngModel)]="booking().bookingStartDate"></text-input>
+                </div>
+                <div class="col-span-6 sm:col-span-3">
+                    <text-input type="date" id="bookingEndDate" name="bookingEndDate"
+                        [(ngModel)]="booking().bookingEndDate"></text-input>
+                </div>
+                <div class="col-span-6">
+                    <textarea-input id="notes" name="notes" rows="6" placeholder="Notes about this booking"
+                        [(ngModel)]="booking().notes"></textarea-input>
+                </div>
+            </div>
+        </fieldset>
+        <div class="flex justify-between">
+            <div></div>
+            <div class="flex gap-x-4">
+                <secondary-button (click)="cancel()">
+                    Cancel
+                </secondary-button>
+                <primary-button type="submit" [disabled]="api.loading()">
+                    {{ api.loading() ? 'Saving...' : 'Create Booking' }}
+                </primary-button>
+            </div>
+        </div>
+    </form>
+
+    <div class="mt-16 flex justify-center gap-x-4">
+        <src-page path="bookings/booking-create.component.html"></src-page>
+    </div>
+</app-page>

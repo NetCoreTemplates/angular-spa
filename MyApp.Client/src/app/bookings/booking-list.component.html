@@ -1,0 +1,93 @@
+<app-page title="Bookings" class="max-w-6xl">
+
+    @if (error()) {
+    <error-summary [status]="error()"></error-summary>
+    }
+
+    <div class="my-2 flex justify-end">
+        <primary-button (click)="navigateToCreate()">New Booking</primary-button>
+    </div>
+
+    @if (loading()) {
+        <form-loading [loading]="loading()" text="Loading Bookings..."></form-loading>
+    }
+    @if (allBookings().length > 0) {
+    <data-grid [items]="allBookings()" 
+        [visibleFrom]="{ name:'xl', bookingStartDate:'sm', bookingEndDate:'xl' }"
+        [allowSelection]="true" (rowSelected)="navigateToEdit($event.item.id)">
+
+        <ng-template #nameHeader>
+            Guest <span class="hidden lg:inline">Name</span>
+        </ng-template>
+
+        <ng-template #roomTypeHeader>
+            Room <span class="hidden lg:inline">Type</span>
+        </ng-template>
+
+        <ng-template #roomNumberHeader>
+            <span class="hidden lg:inline">Room</span> No
+        </ng-template>
+
+        <ng-template #bookingStartDateHeader>
+            Check-in
+        </ng-template>
+        <ng-template #bookingStartDate let-date="bookingStartDate">
+            {{ date | date }}
+        </ng-template>
+
+        <ng-template #bookingEndDateHeader>
+            Check-out
+        </ng-template>
+        <ng-template #bookingEndDate let-date="bookingEndDate">
+            {{ date | date }}
+        </ng-template>
+
+        <ng-template #costHeader>
+            Cost
+        </ng-template>
+        <ng-template #cost let-cost="cost">
+            {{ cost | currency }}
+        </ng-template>
+
+        <ng-template #discountHeader>
+            Discount
+        </ng-template>
+        <ng-template #discount let-discount="discount">
+            @if (discount) {
+            <div class="flex items-end">
+                <app-icon class="w-5 h-5 mr-1" type="Coupon"></app-icon>
+                <preview-format [value]="discount.description"></preview-format>
+            </div>
+            }
+        </ng-template>
+
+        <ng-template #cancelledHeader>
+            Status
+        </ng-template>
+        <ng-template #cancelled let-cancelled="cancelled">
+            @if (cancelled) {
+            <span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 dark:bg-red-800 text-red-800 dark:text-red-100">
+                Cancelled
+            </span>
+            }
+            @else {
+            <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100">
+                Active
+            </span>
+            }
+        </ng-template>
+
+    </data-grid>
+    }
+    @else {
+    <!-- No bookings message -->
+    <div class="text-center py-4 bg-gray-50 rounded-md">
+        <p class="text-gray-500">No bookings found</p>
+    </div>
+    }
+    
+    <div class="mt-8 flex justify-center gap-x-4">
+        <src-page path="bookings/booking-list.component.html"></src-page>
+    </div>
+
+</app-page>

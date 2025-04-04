@@ -1,0 +1,58 @@
+@if (items.length) {
+<div #refResults [ngClass]="gridClassValue">
+    <div [ngClass]="grid2ClassValue">
+        <div [ngClass]="grid3ClassValue">
+            <div [ngClass]="grid4ClassValue">
+                <table [ngClass]="tableClassValue">
+                    <thead [ngClass]="theadClassValue">
+                        <tr [ngClass]="theadRowClassValue">
+                            <td *ngFor="let column of visibleColumns"
+                                [ngClass]="[cellClass(column), theadCellClassValue, isOpen(column) ? 'text-gray-900 dark:text-gray-50' : 'text-gray-500 dark:text-gray-400']">
+                  
+                                <!-- Using ng-template with ng-container for slot emulation -->
+                                @if (slotTemplates[column + 'Header']) {
+                                    <ng-container *ngTemplateOutlet="slotTemplates[column + 'Header']; context: { column: column }"></ng-container>
+                                }
+                                @else if (slotHeader(column)) {
+                                    <ng-container>
+                                        <ng-container *ngTemplateOutlet="slotTemplates[slotHeader(column)]; context: { column: column }"></ng-container>
+                                    </ng-container>
+                                }
+                                @else {
+                                    <div (click)="onHeaderSelected($event, column)">
+                                        <div class="flex justify-between items-center">
+                                            <span class="mr-1 select-none">
+                                                {{ headerFormat(column) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                }
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody [ngClass]="tbodyClassValue">
+                        @for (item of items; track $index) {
+                        <tr [ngClass]="getTableRowClass(item, $index)" [ngStyle]="getTableRowStyle(item, $index)"
+                            (click)="onRowSelected($event, $index, item)">
+                            @for (column of visibleColumns; track $index) {
+                            <td [ngClass]="cellClass(column) + 'px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400'">
+                                @if (slotTemplates[column]) {
+                                    <ng-container [ngTemplateOutlet]="slotTemplates[column]" [ngTemplateOutletContext]="item"></ng-container>
+                                }
+                                @else if (slotTemplates[column]) {
+                                    <ng-container [ngTemplateOutlet]="slotTemplates[slotColumn(column)!]" [ngTemplateOutletContext]="item">></ng-container>
+                                }
+                                @else {
+                                    <preview-format [value]="mapGet(item, column)" [format]="columnFormat(column)"></preview-format>
+                                }
+                            </td>
+                            }
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+}

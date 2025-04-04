@@ -1,0 +1,50 @@
+<app-page title="Use a local account to log in." class="max-w-lg">
+    <section class="mt-4 sm:shadow overflow-hidden sm:rounded-md">
+        <form (submit)="onSubmit($event)">
+            <div class="shadow overflow-hidden sm:rounded-md">
+                <error-summary except="userName,password,rememberMe"></error-summary>
+                <div class="px-4 py-5 bg-white dark:bg-black space-y-6 sm:p-6">
+                    <div class="flex flex-col gap-y-4">
+                        <text-input id="userName" name="userName" help="Email you signed up with" autoComplete="email"
+                            [(ngModel)]="request().userName"></text-input>
+                        <text-input id="password" name="password" type="password" help="6 characters or more"
+                            autoComplete="current-password" [(ngModel)]="request().password"></text-input>
+                        <checkbox-input id="rememberMe" name="rememberMe"
+                            [(ngModel)]="request().rememberMe"></checkbox-input>
+                    </div>
+
+                    <div>
+                        <primary-button type="submit">Log in</primary-button>
+                    </div>
+
+                    <div class="mt-8 text-sm">
+                        <p class="mb-3">
+                            <a class="font-semibold" routerLink="/signup">Register as a new user</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+    <div class="mt-8">
+        <h3 class="xs:block mr-4 leading-8 text-gray-500">Quick Links</h3>
+        <div class="flex flex-wrap max-w-lg gap-2">
+            <secondary-button variant="outline" type="button" (click)="setUser('admin@email.com')">
+                admin&#64;email.com
+            </secondary-button>
+            <secondary-button variant="outline" type="button" (click)="setUser('manager@email.com')">
+                manager&#64;email.com
+            </secondary-button>
+            <secondary-button variant="outline" type="button" (click)="setUser('employee@email.com')">
+                employee&#64;email.com
+            </secondary-button>
+            <secondary-button variant="outline" type="button" (click)="setUser('new@user.com')">
+                new&#64;user.com
+            </secondary-button>
+        </div>
+    </div>
+
+    <div class="mt-8 flex justify-center gap-x-4">
+        <src-page path="signin/signin.component.html"></src-page>
+    </div>
+</app-page>

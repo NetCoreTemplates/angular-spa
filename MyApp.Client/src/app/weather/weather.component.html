@@ -1,0 +1,37 @@
+﻿<app-page title="Weather">
+    <p class="my-4">This component demonstrates showing data.</p>
+    @if (error) {
+        <error-summary [status]="error"></error-summary>
+    }
+    @else if (!forecasts) {
+        <p>
+            <em>Loading... Please refresh once the ASP.NET backend has started. See 
+                <a href="https://aka.ms/jspsintegrationangular">https://aka.ms/jspsintegrationangular</a> for more details.
+            </em>
+        </p>
+    }
+    @else if (forecasts) {
+        <data-grid [items]="forecasts">
+
+          <ng-template #dateHeader>
+            <div class="flex items-center">
+              <span class="font-bold text-green-700 uppercase">Date</span>
+            </div>
+          </ng-template>
+          
+          <ng-template #date let-date="date">{{ date | date:'MMMM d, yyyy' }}</ng-template>
+          <ng-template #temperatureC let-temperatureC="temperatureC">
+            {{ temperatureC }}&deg;
+          </ng-template>
+          <ng-template #temperatureF let-temperatureF="temperatureF">
+            {{ temperatureF }}&deg;
+          </ng-template>
+          <ng-template #summary let-summary="summary">{{ summary }}</ng-template>
+
+        </data-grid>
+    }
+
+    <div class="mt-8 flex justify-center gap-x-4">
+        <src-page path="weather/weather.component.html"></src-page>
+    </div>
+</app-page>

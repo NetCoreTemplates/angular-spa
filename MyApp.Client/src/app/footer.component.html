@@ -1,0 +1,40 @@
+<footer class="bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+    <nav class="pt-8 columns-2 sm:flex sm:justify-center sm:space-x-12" aria-label="Footer">
+      <div class="pb-6">
+        <a 
+          routerLink="/about" 
+          routerLinkActive 
+          #aboutActive="routerLinkActive" 
+          [ngClass]="getNavClass(aboutActive.isActive)">
+          About
+        </a>
+      </div>
+      <div class="pb-6">
+        <a 
+          routerLink="/privacy" 
+          routerLinkActive 
+          #privacyActive="routerLinkActive" 
+          [ngClass]="getNavClass(privacyActive.isActive)">
+          Privacy
+        </a>
+      </div>
+    </nav>
+  
+    <div class="container mx-auto px-5">
+      <div class="py-28 flex flex-col lg:flex-row items-center">
+        <h3 class="text-4xl lg:text-6xl font-bold tracking-tighter leading-tight text-center lg:text-left mb-10 lg:mb-0 lg:pr-4 lg:w-1/2">
+          A ServiceStack Project
+        </h3>
+        <div class="flex flex-col lg:flex-row justify-center items-center lg:pl-4 lg:w-1/2">
+          <a href="https://docs.servicestack.net"
+             class="mx-3 bg-black hover:bg-white hover:text-black border border-black text-white font-bold py-3 px-12 lg:px-8 duration-200 transition-colors mb-6 lg:mb-0">
+            Read Documentation
+          </a>
+          <a href="https://github.com/NetCoreTemplates/angular-spa"
+             class="mx-3 font-bold hover:underline">
+            View on GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>

@@ -1,0 +1,9 @@
+<app-page title="Counter" class="max-w-fit mx-auto">
+    <p class="my-4">Current count: {{count()}}</p>
+
+    <primary-button (click)="count.set(count() + 1)" color="red">Click me</primary-button>
+    
+    <div class="mt-8 flex justify-center gap-x-4">
+        <src-page path="counter/counter.component.html"></src-page>
+    </div>
+</app-page>
