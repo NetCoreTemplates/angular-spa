@@ -38,7 +38,6 @@ export class BookingCreateComponent {
     cost: 0,
     cancelled: false
   }));
-  bookingGet = this.booking.asReadonly();
 
   async save(): Promise<void> {
     this.api.begin();
