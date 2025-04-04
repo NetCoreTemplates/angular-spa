@@ -38,6 +38,9 @@ import { ShellCommandComponent } from './shell-command.component';
         <shell-command class="mb-2">dotnet tool install -g x</shell-command>
         <shell-command class="mb-2">x new {{ template }} {{ project }}</shell-command>
 
+        <h4 class="py-6 text-center text-xl">In <b class="text-red-700">/{{project}}.Client</b>, Install npm dependencies</h4>
+        <shell-command class="mb-2">npm install</shell-command>
+
         <h4 class="py-6 text-center text-xl">In <b class="text-red-700">/{{project}}</b>, Create Database</h4>
         <shell-command class="mb-2">npm run migrate</shell-command>
 
