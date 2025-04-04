@@ -20,6 +20,6 @@ export class SrcPageComponent {
     @Input() path!: string;
 
     get fullPath(): string {
-        return combinePaths('/MyApp.Client/src/pages', this.path);
+        return combinePaths('/MyApp.Client/src/app', this.path);
     }
 }
