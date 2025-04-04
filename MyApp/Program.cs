@@ -23,7 +23,7 @@ services.AddIdentity<ApplicationUser, IdentityRole>(options => {
 services.ConfigureApplicationCookie(options => options.DisableRedirectsForApis());
 
 services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo("App_Data"));
+    .PersistKeysToFileSystem(new DirectoryInfo("App_Data".AssertDir()));
 
 // Add application services.
 services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
