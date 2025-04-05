@@ -48,7 +48,7 @@ public class IdentityRegistrationValidator : AbstractValidator<Register>
 }
 
 public class RegisterService(UserManager<ApplicationUser> userManager, IEmailSender<ApplicationUser> emailSender, AppConfig appConfig)
-    : IdentityRegisterServiceBase<ApplicationUser, IdentityRole, string>(userManager)
+    : IdentityRegisterServiceBase<ApplicationUser>(userManager)
 {
     string AppBaseUrl => appConfig.AppBaseUrl ?? Request.GetBaseUrl();
     string ApiBaseUrl => appConfig.ApiBaseUrl ?? Request.GetBaseUrl();
@@ -57,6 +57,7 @@ public class RegisterService(UserManager<ApplicationUser> userManager, IEmailSen
     public async Task<object> PostAsync(Register request)
     {
         var emailNotSetup = emailSender is IdentityNoOpEmailSender;
+        var authCtx = AuthContext;
         
         var newUser = request.ConvertTo<ApplicationUser>();
         newUser.UserName ??= newUser.Email;
@@ -68,7 +69,7 @@ public class RegisterService(UserManager<ApplicationUser> userManager, IEmailSen
         var result = await UserManager.CreateAsync(newUser, request.Password);
         result.AssertSucceeded();
 
-        var session = AuthContext.UserToSessionConverter(newUser);
+        var session = authCtx.UserToSessionConverter(newUser);
         await RegisterNewUserAsync(session, newUser);
 
         var userId = await UserManager.GetUserIdAsync(newUser);
