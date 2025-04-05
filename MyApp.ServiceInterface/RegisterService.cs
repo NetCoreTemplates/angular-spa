@@ -48,7 +48,7 @@ public class IdentityRegistrationValidator : AbstractValidator<Register>
 }
 
 public class RegisterService(UserManager<ApplicationUser> userManager, IEmailSender<ApplicationUser> emailSender, AppConfig appConfig)
-    : IdentityRegisterServiceBase<ApplicationUser, string>(userManager)
+    : IdentityRegisterServiceBase<ApplicationUser, IdentityRole, string>(userManager)
 {
     string AppBaseUrl => appConfig.AppBaseUrl ?? Request.GetBaseUrl();
     string ApiBaseUrl => appConfig.ApiBaseUrl ?? Request.GetBaseUrl();
