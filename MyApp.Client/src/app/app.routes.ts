@@ -7,6 +7,8 @@ import { MarkdownPageComponent } from './markdown-page.component';
 import { SignInComponent } from './signin/signin.component';
 import { SignUpComponent } from './signup/signup.component';
 import { SignupConfirmComponent } from './signup/signup-confirm.component';
+import { ProfileComponent } from './profile/profile.component';
+import { authGuard } from 'src/guards';
 
 import { BOOKING_ROUTES } from './bookings/booking.routes';
 
@@ -18,6 +20,7 @@ export const routes: Routes = [
     { path:'signin', component: SignInComponent },
     { path:'signup', component: SignUpComponent },
     { path:'signup-confirm', component: SignupConfirmComponent },
+    { path:'profile', component: ProfileComponent, canActivate: [authGuard] },
     { path:'about', component: MarkdownPageComponent, data: { page: 'about.md' } },
     { path:'privacy', component: MarkdownPageComponent, data: { page: 'privacy.md' } },
     ...BOOKING_ROUTES,

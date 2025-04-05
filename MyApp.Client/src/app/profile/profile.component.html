@@ -1,0 +1,23 @@
+<app-page title="Profile">
+
+    <div class="flex flex-col items-center justify-center gap-2">
+        <img class="w-36 h-36 text-gray-700 rounded-full" [src]="user()!.profileUrl" alt=""
+            (error)="onIconError($event)" />
+        @if (user()!.displayName != user()!.userName) {
+            <div>{{user()!.displayName}}</div>
+        }
+        <div>{{user()!.userName}}</div>
+        <div class="mt-2">
+            @for (role of user()!.roles || []; track $index) {
+            <span class="ml-3 inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium leading-5 bg-indigo-100 text-indigo-800">
+                {{role}}
+            </span>
+            }
+        </div>
+        <secondary-button mat-button class="mt-8" (click)="signout()">Sign Out</secondary-button>
+    </div>
+
+    <div class="mt-8 flex justify-center gap-x-4">
+        <src-page path="profile/profile.component.html"></src-page>
+    </div>
+</app-page>
