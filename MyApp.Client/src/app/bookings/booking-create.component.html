@@ -40,8 +40,8 @@
         <div class="flex justify-between">
             <div></div>
             <div class="flex gap-x-4">
-                <secondary-button (click)="cancel()">
-                    Cancel
+                <secondary-button (click)="close()">
+                    Close
                 </secondary-button>
                 <primary-button type="submit" [disabled]="api.loading()">
                     {{ api.loading() ? 'Saving...' : 'Create Booking' }}

@@ -76,7 +76,6 @@ export class SignUpComponent {
 
         this.api.begin();
 
-
         const api = await this.client.api(request);
         if (api.succeeded) {
             await this.authService.revalidate();

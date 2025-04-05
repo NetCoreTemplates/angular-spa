@@ -1,16 +1,12 @@
 <app-page title="Bookings" class="max-w-6xl">
 
-    @if (error()) {
-    <error-summary [status]="error()"></error-summary>
-    }
+    <form-loading text="Loading Bookings..."></form-loading>
+    <error-summary></error-summary>
 
     <div class="my-2 flex justify-end">
         <primary-button (click)="navigateToCreate()">New Booking</primary-button>
     </div>
 
-    @if (loading()) {
-        <form-loading [loading]="loading()" text="Loading Bookings..."></form-loading>
-    }
     @if (allBookings().length > 0) {
     <data-grid [items]="allBookings()" 
         [visibleFrom]="{ name:'xl', bookingStartDate:'sm', bookingEndDate:'xl' }"
@@ -80,7 +76,6 @@
     </data-grid>
     }
     @else {
-    <!-- No bookings message -->
     <div class="text-center py-4 bg-gray-50 rounded-md">
         <p class="text-gray-500">No bookings found</p>
     </div>

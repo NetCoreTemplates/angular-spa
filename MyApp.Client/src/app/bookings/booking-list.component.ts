@@ -6,15 +6,18 @@ import { JsonServiceClient, ResponseStatus } from '@servicestack/client';
 import { Booking, QueryBookings } from 'src/dtos';
 import { SrcPageComponent } from 'src/shared/src-page.component';
 import { PageComponent } from '../page.component';
-import { tailwindComponents } from 'src/components';
+import { ApiState, provideApiState, tailwindComponents } from 'src/components';
 
 @Component({
     selector: 'app-booking-list',
     templateUrl: './booking-list.component.html',
+    providers: [
+        ...provideApiState()
+    ],
     imports: [
-        CommonModule, 
+        CommonModule,
         FormsModule,
-        DatePipe, 
+        DatePipe,
         CurrencyPipe,
         PageComponent,
         SrcPageComponent,
@@ -24,30 +27,26 @@ import { tailwindComponents } from 'src/components';
 export class BookingListComponent implements OnInit {
     private router = inject(Router);
     private client = inject(JsonServiceClient);
+    api = inject(ApiState);
 
     // Signals for state
     allBookings = signal<Booking[]>([]);
-    
-    loading = signal<boolean>(true);
-    error = signal<ResponseStatus | undefined>(undefined);
 
     ngOnInit(): void {
         this.loadBookings();
     }
 
     async loadBookings(): Promise<void> {
-        this.loading.set(true);
-        this.error.set(undefined);
+        this.api.begin();
 
         const api = await this.client.api(new QueryBookings({
-            orderByDesc:'BookingStartDate',
+            orderByDesc: 'BookingStartDate',
         }));
         if (api.succeeded) {
             this.allBookings.set(api.response!.results);
-        } else if (api.error) {
-            this.error.set(api.error);
         }
-        this.loading.set(false);
+        
+        this.api.complete(api.error);
     }
 
     navigateToCreate(): void {

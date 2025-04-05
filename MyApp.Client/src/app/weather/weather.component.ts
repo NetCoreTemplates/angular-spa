@@ -2,19 +2,17 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Forecast, GetWeatherForecast, ResponseStatus } from 'src/dtos';
 import { ApiHttpClient } from 'src/components/services/api-http-client.service';
 import { PageComponent } from "../page.component";
-import { ErrorSummaryComponent } from 'src/components/error-summary.component';
-import { DataGridComponent } from 'src/components/data-grid.component';
 import { SrcPageComponent } from 'src/shared/src-page.component';
 import { DatePipe } from '@angular/common';
+import { tailwindComponents } from 'src/components';
 
 @Component({
   selector: 'weather',
   imports: [
     DatePipe,
     PageComponent,
-    DataGridComponent,
-    ErrorSummaryComponent,
     SrcPageComponent,
+    ...tailwindComponents(),
   ],
   templateUrl: './weather.component.html'
 })

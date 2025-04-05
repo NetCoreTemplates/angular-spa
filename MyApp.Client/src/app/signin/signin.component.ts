@@ -29,7 +29,7 @@ export class SignInComponent implements OnInit {
     private router = inject(Router);
     private route = inject(ActivatedRoute);
     private authService = inject(AuthService);
-    client = inject(JsonServiceClient);
+    private client = inject(JsonServiceClient);
     api = inject(ApiState);
 
     request = signal<Authenticate>(new Authenticate({

@@ -1,27 +1,29 @@
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { AppComponent } from './app.component';
 import { ApiHttpClient } from 'src/components/services/api-http-client.service';
+import { WeatherComponent } from './weather.component';
+import { tailwindComponents } from 'src/components';
 
-describe('AppComponent', () => {
-  let component: AppComponent;
-  let fixture: ComponentFixture<AppComponent>;
+describe('WeatherComponent', () => {
+  let component: WeatherComponent;
+  let fixture: ComponentFixture<WeatherComponent>;
   let httpMock: HttpTestingController;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports:[AppComponent],
+      imports:[WeatherComponent],
       providers:[
         provideHttpClient(),
         provideHttpClientTesting(),
         ApiHttpClient,
+        ...tailwindComponents(),
       ]
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AppComponent);
+    fixture = TestBed.createComponent(WeatherComponent);
     component = fixture.componentInstance;
     httpMock = TestBed.inject(HttpTestingController);
   });

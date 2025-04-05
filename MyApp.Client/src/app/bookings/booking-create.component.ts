@@ -12,9 +12,9 @@ import { ApiState, provideApiState, tailwindComponents } from 'src/components';
 @Component({
   selector: 'app-booking-create',
   templateUrl: './booking-create.component.html',
-    providers: [
-        ...provideApiState()
-    ],
+  providers: [
+    ...provideApiState()
+  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -52,7 +52,7 @@ export class BookingCreateComponent {
     this.api.complete(api.error);
   }
 
-  cancel(): void {
+  close(): void {
     // Navigate back without saving
     this.router.navigate(['/bookings']);
   }

@@ -1,6 +1,5 @@
 <app-page title="Todos Application" class="max-w-lg">
     <div class="px-6 py-4">
-        <!-- Loading and Error States -->
         @if (loading) {
         <div class="flex justify-center mb-4">
             <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
@@ -27,7 +26,6 @@
         </div>
 
         @if (filteredTodos.length > 0) {
-        <!-- Todo List -->
         <ul class="divide-y divide-gray-200">
             @for (todo of filteredTodos; track todo.id) {
             <li class="py-3 flex items-center group">
@@ -71,7 +69,6 @@
         }
 
         @if (todos.length === 0 && !loading) {
-        <!-- Empty State -->
         <div class="py-6 text-center text-gray-500">
             <p>No todos yet. Add one above!</p>
         </div>
