@@ -21,7 +21,6 @@ export class WeatherComponent implements OnInit {
 
   public error: ResponseStatus | null = null;
   public forecasts: Forecast[] = [];
-  public testValue:string = '';
 
   ngOnInit() {
     this.getForecasts();

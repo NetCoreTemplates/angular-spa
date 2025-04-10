@@ -1,7 +1,6 @@
 <app-page title="Edit Booking">
 
     <form-loading></form-loading>
-    <error-summary except="name,roomType,roomNumber,cost,bookingStartDate,notes"></error-summary>
 
     @if (booking().id) {
     <form class="grid gap-4 py-4" (ngSubmit)="save()">
@@ -63,6 +62,9 @@
             </div>
         </div>
     </form>
+    }
+    @else {
+        <error-summary></error-summary>
     }
 
     <div class="mt-16 flex justify-center gap-x-4">
