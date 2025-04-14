@@ -36,7 +36,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.*" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.*" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.*" />
     <PackageReference Include="ServiceStack.AspNetCore.OpenApi" Version="8.*" />
   </ItemGroup>
 
