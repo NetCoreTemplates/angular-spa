@@ -34,7 +34,7 @@ import { textInputValue } from './utils';
           </label>
       }
 
-      <div [ngClass]="fixShadow('mt-1 relative shadow-sm rounded-md')">
+      <div [ngClass]="fixShadow('mt-1 relative')">
         <input #input
           [type]="useType"
           [id]="id"

@@ -33,7 +33,7 @@ import { textInputValue } from './utils';
           </label>
       }
 
-      <div class="mt-1 relative shadow-sm rounded-md">
+      <div class="mt-1 relative">
           <textarea #input
               [id]="id"
               [name]="name"
