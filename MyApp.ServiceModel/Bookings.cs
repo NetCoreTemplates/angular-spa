@@ -45,8 +45,6 @@ public enum RoomType
 
 [Tag("bookings"), Description("Find Bookings")]
 [Notes("Find out how to quickly create a <a class='svg-external' target='_blank' href='https://youtu.be/nhc4MZufkcM'>C# Bookings App from Scratch</a>")]
-[Route("/bookings", "GET")]
-[Route("/bookings/{Id}", "GET")]
 [AutoApply(Behavior.AuditQuery)]
 public class QueryBookings : QueryDb<Booking>
 {
@@ -62,7 +60,6 @@ public class QueryBookings : QueryDb<Booking>
 [Tag("bookings"), Description("Create a new Booking")]
 [LocodeCss(Field = "col-span-12 sm:col-span-6", Fieldset = "grid grid-cols-8 gap-2", Form = "border overflow-hidden max-w-screen-lg")]
 [ExplorerCss(Field = "col-span-12 sm:col-span-6", Fieldset = "grid grid-cols-6 gap-8", Form = "border border-indigo-500 overflow-hidden max-w-screen-lg")]
-[Route("/bookings", "POST")]
 [ValidateHasRole(Roles.Employee)]
 [AutoApply(Behavior.AuditCreate)]
 public class CreateBooking : ICreateDb<Booking>, IReturn<IdResponse>
@@ -84,7 +81,6 @@ public class CreateBooking : ICreateDb<Booking>, IReturn<IdResponse>
 
 [Tag("bookings"), Description("Update an existing Booking")]
 [Notes("Find out how to quickly create a <a class='svg-external' target='_blank' href='https://youtu.be/nhc4MZufkcM'>C# Bookings App from Scratch</a>")]
-[Route("/booking/{Id}", "PATCH")]
 [ValidateHasRole(Roles.Employee)]
 [AutoApply(Behavior.AuditModify)]
 public class UpdateBooking : IPatchDb<Booking>, IReturn<IdResponse>
@@ -105,7 +101,6 @@ public class UpdateBooking : IPatchDb<Booking>, IReturn<IdResponse>
 }
 
 [Tag("bookings"), Description("Delete a Booking")]
-[Route("/booking/{Id}", "DELETE")]
 [ValidateHasRole(Roles.Manager)]
 [AutoApply(Behavior.AuditSoftDelete)]
 public class DeleteBooking : IDeleteDb<Booking>, IReturnVoid
@@ -125,14 +120,12 @@ public class Coupon
 }
 
 [Tag("bookings"), Description("Find Coupons")]
-[Route("/coupons", "GET")]
 public class QueryCoupons : QueryDb<Coupon>
 {
     public string? Id { get; set; }
 }
 
 [Tag("bookings")]
-[Route("/coupons", "POST")]
 [ValidateHasRole(Roles.Employee)]
 public class CreateCoupon : ICreateDb<Coupon>, IReturn<IdResponse>
 {
@@ -145,7 +138,6 @@ public class CreateCoupon : ICreateDb<Coupon>, IReturn<IdResponse>
 }
 
 [Tag("bookings")]
-[Route("/coupons/{Id}", "PATCH")]
 [ValidateHasRole(Roles.Employee)]
 public class UpdateCoupon : IPatchDb<Coupon>, IReturn<IdResponse>
 {
@@ -159,7 +151,6 @@ public class UpdateCoupon : IPatchDb<Coupon>, IReturn<IdResponse>
 }
 
 [Tag("bookings"), Description("Delete a Coupon")]
-[Route("/coupons/{Id}", "DELETE")]
 [ValidateHasRole("Manager")]
 public class DeleteCoupon : IDeleteDb<Coupon>, IReturnVoid
 {
