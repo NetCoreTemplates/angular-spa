@@ -23,7 +23,7 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Set up environment variables
         run: |
@@ -76,7 +76,8 @@ jobs:
           driver-opts: image=moby/buildkit:master
 
       - name: Kamal bootstrap
-        run: kamal server bootstrap
+        run: |
+          kamal server bootstrap
 
       - name: Check if first run and execute kamal app boot if necessary
         run: |
@@ -102,4 +103,5 @@ jobs:
       - name: Deploy with Kamal
         run: |
           kamal lock release -v
+          kamal server exec --no-interactive 'echo "${{ env.KAMAL_REGISTRY_PASSWORD }}" | docker login ghcr.io -u ${{ env.KAMAL_REGISTRY_USERNAME }} --password-stdin'
           kamal deploy -P --version latest

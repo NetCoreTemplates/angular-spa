@@ -24,7 +24,7 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Set up environment variables
         run: |
@@ -83,9 +83,9 @@ jobs:
           password: ${{ env.KAMAL_REGISTRY_PASSWORD }}
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: '8.0'
+          dotnet-version: 8.0.x
 
       - name: Build and push Docker image
         run: |

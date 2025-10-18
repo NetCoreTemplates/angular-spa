@@ -14,8 +14,7 @@ public class ConfigureDb : IHostingStartup
             var connectionString = context.Configuration.GetConnectionString("DefaultConnection")
                 ?? "DataSource=App_Data/app.db;Cache=Shared";
             
-            services.AddSingleton<IDbConnectionFactory>(new OrmLiteConnectionFactory(
-                connectionString, SqliteDialect.Provider));
+            services.AddOrmLite(options => options.UseSqlite(connectionString));
 
             // $ dotnet ef migrations add CreateIdentitySchema
             // $ dotnet ef database update
