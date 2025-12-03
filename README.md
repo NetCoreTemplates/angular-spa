@@ -1,6 +1,6 @@
 # angular-spa
 
-.NET 10.0 angular-spa Pages Tailwind Website
+A ServiceStack Angular SPA template combining .NET 10.0 backend with Angular 21 frontend. The project uses a layered architecture with clear separation between API, business logic, DTOs, and frontend.
 
 [![](https://raw.githubusercontent.com/ServiceStack/Assets/master/csharp-templates/angular-spa.png)](http://angular-spa.web-templates.io)
 
