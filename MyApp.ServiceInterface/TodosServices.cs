@@ -8,7 +8,7 @@ public class TodosServices(IAutoQueryData autoQuery) : Service
     static readonly PocoDataSource<Todo> Todos = PocoDataSource.Create(new Todo[]
     {
         new () { Id = 1, Text = "Learn" },
-        new () { Id = 2, Text = "Angular", IsFinished = true },
+        new () { Id = 2, Text = "React", IsFinished = true },
         new () { Id = 3, Text = "Vite!" },
     }, nextId: x => x.Select(e => e.Id).Max());
 

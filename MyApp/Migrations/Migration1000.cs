@@ -1,70 +1,57 @@
 using System.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage;
-using MyApp.Data;
 using ServiceStack;
 using ServiceStack.DataAnnotations;
 using ServiceStack.OrmLite;
+using System;
+using System.IO;
+using System.Collections;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using MyApp;
 
 namespace MyApp.Migrations;
 
 public class Migration1000 : MigrationBase
 {
+
+    [Notes("Captures a Persons Name & Room Booking information")]
     public class Booking : AuditBase
     {
         [AutoIncrement]
         public int Id { get; set; }
-        public string Name { get; set; } = default!;
+        public string Name { get; set; }
         public RoomType RoomType { get; set; }
         public int RoomNumber { get; set; }
+        [IntlDateTime(DateStyle.Long)]
         public DateTime BookingStartDate { get; set; }
+        [IntlRelativeTime]
         public DateTime? BookingEndDate { get; set; }
+        [IntlNumber(Currency="USD")]
         public decimal Cost { get; set; }
         public string? Notes { get; set; }
         public bool? Cancelled { get; set; }
-
-        [References(typeof(Coupon))]
-        public string? CouponId { get; set; }
     }
-
-    public class Coupon
-    {
-        public string Id { get; set; } = default!;
-        public string Description { get; set; } = default!;
-        public int Discount { get; set; }
-        public DateTime ExpiryDate { get; set; }
-    }
-
+    
     public enum RoomType
     {
-        Queen,
+        Single,
         Double,
+        Queen,
+        Twin,
         Suite,
     }
+    
 
     public override void Up()
     {
-        Db.CreateTable<Coupon>();
         Db.CreateTable<Booking>();
-
-        new[] { 5, 10, 15, 20, 25, 30, 40, 50, 60, 70, }.Each(percent => {
-            Db.Insert(new Coupon
-            {
-                Id = $"BOOK{percent}",
-                Description = $"{percent}% off",
-                Discount = percent,
-                ExpiryDate = DateTime.UtcNow.AddDays(30)
-            });
-        });
-
-        CreateBooking(Db, "First Booking!", RoomType.Queen, 10, 100, "BOOK10", "employee@email.com", "Window view");
-        CreateBooking(Db, "Booking 2", RoomType.Double, 12, 120, "BOOK25", "manager@email.com", "Pool view");
-        CreateBooking(Db, "Booking the 3rd", RoomType.Suite, 13, 130, null, "employee@email.com", "Sea view");
+        CreateBooking(Db, "First Booking!", RoomType.Queen, 10, 100, "employee@email.com");
+        CreateBooking(Db, "Booking 2", RoomType.Double, 12, 120, "manager@email.com");
+        CreateBooking(Db, "Booking the 3rd", RoomType.Suite, 13, 130, "employee@email.com");
     }
 
     public void CreateBooking(IDbConnection? db,
-        string name, RoomType type, int roomNo, decimal cost, string? couponId, string by, string? notes=null) =>
+        string name, RoomType type, int roomNo, decimal cost, string by) =>
         db.Insert(new Booking
         {
             Name = name,
@@ -73,17 +60,14 @@ public class Migration1000 : MigrationBase
             Cost = cost,
             BookingStartDate = DateTime.UtcNow.AddDays(roomNo),
             BookingEndDate = DateTime.UtcNow.AddDays(roomNo + 7),
-            CouponId = couponId,
             CreatedBy = by,
             CreatedDate = DateTime.UtcNow,
             ModifiedBy = by,
             ModifiedDate = DateTime.UtcNow,
-            Notes = notes,
         });
 
     public override void Down()
     {
         Db.DropTable<Booking>();
-        Db.DropTable<Coupon>();
     }
 }

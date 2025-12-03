@@ -1,6 +1,6 @@
 # angular-spa
 
-.NET 8.0 angular-spa Pages Tailwind Website
+.NET 10.0 angular-spa Pages Tailwind Website
 
 [![](https://raw.githubusercontent.com/ServiceStack/Assets/master/csharp-templates/angular-spa.png)](http://angular-spa.web-templates.io)
 

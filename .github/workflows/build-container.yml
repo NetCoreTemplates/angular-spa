@@ -15,8 +15,7 @@ on:
 # Only update envs here if you need to change them for this workflow
 env:
   DOCKER_BUILDKIT: 1
-  KAMAL_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-  KAMAL_REGISTRY_USERNAME: ${{ github.actor }}
+  KAMAL_DEPLOY_HOST: ${{ secrets.KAMAL_DEPLOY_HOST }}
 
 jobs:
   build-container:
@@ -32,6 +31,24 @@ jobs:
           echo "repository_name=$(echo ${{ github.repository }} | cut -d '/' -f 2)" >> $GITHUB_ENV
           echo "repository_name_lower=$(echo ${{ github.repository }} | cut -d '/' -f 2 | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
           echo "org_name=$(echo ${{ github.repository }} | cut -d '/' -f 1)" >> $GITHUB_ENV
+
+          # Set SERVICE_LABEL: derive from GITHUB_REPOSITORY (replace dots with dashes)
+          echo "SERVICE_LABEL=$(echo ${{ github.repository }} | cut -d '/' -f 2 | tr '.' '-')" >> $GITHUB_ENV
+
+          # Set KAMAL_DEPLOY_HOST: use secret if available, otherwise use repository name
+          if [ -n "${{ secrets.KAMAL_DEPLOY_HOST }}" ]; then
+            DEPLOY_HOST="${{ secrets.KAMAL_DEPLOY_HOST }}"
+          else
+            DEPLOY_HOST="$(echo ${{ github.repository }} | cut -d '/' -f 2)"
+          fi
+
+          # Validate KAMAL_DEPLOY_HOST contains at least one '.'
+          if [[ ! "$DEPLOY_HOST" == *.* ]]; then
+            echo "Error: KAMAL_DEPLOY_HOST must contain a hostname, e.g. example.com (got: $DEPLOY_HOST)"
+            exit 1
+          fi
+
+          echo "KAMAL_DEPLOY_HOST=$DEPLOY_HOST" >> $GITHUB_ENV
 
       # This step is for the deployment of the templates only, safe to delete
       - name: Modify csproj for template deploy
@@ -54,12 +71,17 @@ jobs:
         if: steps.check_client.outputs.client_exists == 'true'
         uses: actions/setup-node@v3
         with:
-          node-version: 22
+          node-version: 24
 
       - name: Install npm dependencies
         if: steps.check_client.outputs.client_exists == 'true'
         working-directory: ./MyApp.Client
         run: npm install
+
+      - name: Build client
+        if: steps.check_client.outputs.client_exists == 'true'
+        working-directory: ./MyApp.Client
+        run: npm run build
 
       - name: Install x tool
         run: dotnet tool install -g x
@@ -79,14 +101,21 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ env.KAMAL_REGISTRY_USERNAME }}
-          password: ${{ env.KAMAL_REGISTRY_PASSWORD }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
 
       - name: Build and push Docker image
+        env:
+          SERVICESTACK_LICENSE: ${{ secrets.SERVICESTACK_LICENSE }}
+          KAMAL_DEPLOY_HOST: ${{ secrets.KAMAL_DEPLOY_HOST }}
         run: |
-          dotnet publish --os linux --arch x64 -c Release -p:ContainerRepository=${{ env.image_repository_name }} -p:ContainerRegistry=ghcr.io -p:ContainerImageTags=latest -p:ContainerPort=80
+          dotnet publish --os linux --arch x64 -c Release \
+            -p:ContainerRepository=${{ env.image_repository_name }} \
+            -p:ContainerRegistry=ghcr.io -p:ContainerImageTags=latest \
+            -p:ContainerPort=80 \
+            -p:ContainerEnvironmentVariable="SERVICESTACK_LICENSE=${{ env.SERVICESTACK_LICENSE }}"

@@ -1,5 +1,4 @@
-﻿using ServiceStack;
-using ServiceStack.Data;
+﻿using ServiceStack.Data;
 
 [assembly: HostingStartup(typeof(MyApp.ConfigureAutoQuery))]
 
@@ -18,8 +17,8 @@ public class ConfigureAutoQuery : IHostingStartup
             
             // For Bookings https://docs.servicestack.net/autoquery-crud-bookings
             services.AddPlugin(new AutoQueryFeature {
-                 MaxLimit = 1000,
-                 //IncludeTotal = true,
+                MaxLimit = 1000,
+                //IncludeTotal = true,
             });
         })
         .ConfigureAppHost(appHost => {

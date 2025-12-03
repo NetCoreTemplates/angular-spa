@@ -16,10 +16,26 @@ jobs:
       - name: Setup dotnet
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 10.0.x
+
+      - name: Restore NuGet packages
+        run: dotnet restore MyApp.slnx
+
+      # If your feed requires authentication, enable and configure the step below.
+      # This example uses a Personal Access Token stored in secrets.NUGET_API_KEY.
+      # Alternatively, you can use the NuGet Authenticate action from Azure Pipelines.
+      # - name: Authenticate private NuGet feed
+      #   env:
+      #     NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      #   run: |
+      #     dotnet nuget add source "https://YOUR_FEED_URL/index.json" \
+      #       --name "PrivateFeed" \
+      #       --username "YOUR_USERNAME" \
+      #       --password "$NUGET_API_KEY" \
+      #       --store-password-in-clear-text
 
       - name: build
-        run: dotnet build
+        run: dotnet build --no-restore
         working-directory: .
 
       - name: test

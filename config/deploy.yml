@@ -1,27 +1,42 @@
-# Name of your application. Used to uniquely configure containers.
-service: my-app
+# Kamal deploy config for this repository. Uses environment variables:
+# - GITHUB_REPOSITORY (e.g. acme/example.org)   - from GitHub Action ${github.repository}
+# - KAMAL_REGISTRY_USERNAME (e.g. my-user)      - from GitHub Action ${github.actor}
+# - KAMAL_REGISTRY_PASSWORD ($GITHUB_TOKEN)     - from GitHub Action ${secrets.GITHUB_TOKEN}
+# - KAMAL_DEPLOY_IP (e.g. 100.100.100.100)      - from GitHub Action Secret
+# - KAMAL_DEPLOY_HOST (e.g. example.org)        - from GitHub Action Secret
+# - POSTGRES_PASSWORD (e.g. random-password)    - from GitHub Action Secret
 
-# Name of the container image.
-image: my-user/myapp
+# Using environment variables keeps this configuration reusable across multiple apps.
+# For a simpler, app-specific setup, you can replace them with hard-coded values.
+
+# Name of your application. Used to uniquely configure containers. (e.g. example-org)
+service: <%= ENV['GITHUB_REPOSITORY'].to_s.split('/').last.tr('.', '-') %>
+
+# Name of the container image. (e.g. ghcr.io/acne/example.org)
+image: ghcr.io/<%= ENV['GITHUB_REPOSITORY'].to_s.downcase %>
 
 # Required for use of ASP.NET Core with Kamal-Proxy.
 env:
-  ASPNETCORE_FORWARDEDHEADERS_ENABLED: true
+  clear:
+    ASPNETCORE_FORWARDEDHEADERS_ENABLED: true
+  # secrets from ./kamal/secrets
+  secret:
+    - SERVICESTACK_LICENSE
 
 # Deploy to these servers.
 servers:
-  # IP address of server, optionally use env variable.
+  # IP address of server to deploy to. (e.g. 100.100.100.100)
   web:
-    - 192.168.0.1
-#   - <%= ENV['KAMAL_DEPLOY_IP'] %>
-
+    hosts:
+     - <%= ENV['KAMAL_DEPLOY_IP'] %>
 
 # Enable SSL auto certification via Let's Encrypt (and allow for multiple apps on one server).
 # If using something like Cloudflare, it is recommended to set encryption mode
 # in Cloudflare's SSL/TLS setting to "Full" to enable end-to-end encryption.
 proxy:
   ssl: true
-  host: my-app.example.com
+  # Hostname to proxy. (e.g. example.org)
+  host: <%= ENV['KAMAL_DEPLOY_HOST'] %>
   # kamal-proxy connects to your container over port 80, use `app_port` to specify a different port.
   app_port: 8080
 
@@ -41,7 +56,7 @@ builder:
   arch: amd64
 
 volumes:
-  - "/opt/docker/MyApp/App_Data:/app/App_Data"
+  - "/opt/docker/<%= ENV['GITHUB_REPOSITORY'].to_s.split('/').last %>/App_Data:/app/App_Data"
 
 #accessories:
 #  litestream:

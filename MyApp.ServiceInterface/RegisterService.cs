@@ -50,9 +50,8 @@ public class IdentityRegistrationValidator : AbstractValidator<Register>
 public class RegisterService(UserManager<ApplicationUser> userManager, IEmailSender<ApplicationUser> emailSender, AppConfig appConfig)
     : IdentityRegisterServiceBase<ApplicationUser>(userManager)
 {
-    string AppBaseUrl => appConfig.AppBaseUrl ?? Request.GetBaseUrl();
-    string ApiBaseUrl => appConfig.ApiBaseUrl ?? Request.GetBaseUrl();
-    private string AppErrorUrl => AppBaseUrl.CombineWith("/error");
+    string BaseUrl => appConfig.BaseUrl ?? Request.GetBaseUrl();
+    private string AppErrorUrl => BaseUrl.CombineWith("/error");
 
     public async Task<object> PostAsync(Register request)
     {
@@ -62,6 +61,7 @@ public class RegisterService(UserManager<ApplicationUser> userManager, IEmailSen
         var newUser = request.ConvertTo<ApplicationUser>();
         newUser.UserName ??= newUser.Email;
         newUser.Email = request.Email;
+        newUser.ProfileUrl ??= SvgCreator.CreateSvgDataUri(char.ToUpper(newUser.UserName![0]));
 
         //TODO: Remove to use force email confirmation
         //newUser.EmailConfirmed = emailNotSetup;
@@ -75,7 +75,7 @@ public class RegisterService(UserManager<ApplicationUser> userManager, IEmailSen
         var userId = await UserManager.GetUserIdAsync(newUser);
         var code = await UserManager.GenerateEmailConfirmationTokenAsync(newUser);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-        var callbackUrl = ApiBaseUrl.CombineWith(new ConfirmEmail
+        var callbackUrl = BaseUrl.CombineWith(new ConfirmEmail
         {
             UserId = userId,
             Code = code,
@@ -89,7 +89,7 @@ public class RegisterService(UserManager<ApplicationUser> userManager, IEmailSen
         
         if (response is RegisterResponse registerResponse)
         {
-            var signupConfirmUrl = AppBaseUrl.CombineWith("/signup-confirm");
+            var signupConfirmUrl = BaseUrl.CombineWith("/signup-confirm");
             if (emailNotSetup)
                 signupConfirmUrl = signupConfirmUrl.AddQueryParam("confirmLink", callbackUrl);
 
@@ -110,6 +110,6 @@ public class RegisterService(UserManager<ApplicationUser> userManager, IEmailSen
         if (!result.Succeeded)
             return HttpResult.Redirect(AppErrorUrl.AddQueryParam("message", "Error confirming your email."));
 
-        return HttpResult.Redirect(AppBaseUrl.CombineWith(request.ReturnUrl ?? "/signin"));
+        return HttpResult.Redirect(BaseUrl.CombineWith(request.ReturnUrl ?? "/signin"));
     }
 }

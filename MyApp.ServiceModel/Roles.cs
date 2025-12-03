@@ -1,4 +1,4 @@
-namespace MyApp.ServiceModel;
+﻿namespace MyApp.ServiceModel;
 
 public class Roles
 {

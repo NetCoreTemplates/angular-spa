@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using ServiceStack.Data;
-using ServiceStack.OrmLite;
 using MyApp.Data;
 using MyApp.Migrations;
-using MyApp.ServiceModel;
+using ServiceStack;
+using ServiceStack.Data;
+using ServiceStack.OrmLite;
 
 [assembly: HostingStartup(typeof(MyApp.ConfigureDbMigrations))]
 
@@ -26,7 +26,10 @@ public class ConfigureDbMigrations : IHostingStartup
                 {
                     using var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                     db.Database.EnsureCreated();
-                    db.Database.Migrate();
+                    if (db.Database.GetPendingMigrations().Any()) {
+                        log.LogInformation("Running EF Migrations...");
+                        db.Database.Migrate();
+                    }
 
                     // Only seed users if DB was just created
                     if (!db.Users.Any())
@@ -40,6 +43,7 @@ public class ConfigureDbMigrations : IHostingStartup
                 migrator.Run();
             });
             AppTasks.Register("migrate.revert", args => migrator.Revert(args[0]));
+            AppTasks.Register("migrate.rerun", args => migrator.Rerun(args[0]));
             AppTasks.Run();
         });
 
@@ -48,7 +52,7 @@ public class ConfigureDbMigrations : IHostingStartup
         //initializing custom roles 
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-        string[] allRoles = [Roles.Admin, Roles.Manager, Roles.Employee];
+        string[] allRoles = ["Admin", "Manager", "Employee"];
 
         void assertResult(IdentityResult result)
         {
@@ -79,47 +83,58 @@ public class ConfigureDbMigrations : IHostingStartup
             }
         }
 
-        await EnsureUserAsync(new ApplicationUser
-        {
-            DisplayName = "Test User",
-            Email = "test@email.com",
-            UserName = "test@email.com",
-            FirstName = "Test",
-            LastName = "User",
-            EmailConfirmed = true,
-            ProfileUrl = "/img/profiles/user1.svg",
-        }, "p@55wOrd");
+        ApplicationUser[] users = [
+            new()
+            {
+                DisplayName = "Test User",
+                Email = "test@email.com",
+                UserName = "test@email.com",
+                FirstName = "Test",
+                LastName = "User",
+                EmailConfirmed = true,
+            },
+            new()
+            {
+                DisplayName = "Test Employee",
+                Email = "employee@email.com",
+                UserName = "employee@email.com",
+                FirstName = "Test",
+                LastName = "Employee",
+                EmailConfirmed = true,
+            },
+            new()
+            {
+                DisplayName = "Test Manager",
+                Email = "manager@email.com",
+                UserName = "manager@email.com",
+                FirstName = "Test",
+                LastName = "Manager",
+                EmailConfirmed = true,
+            },
+            new()
+            {
+                DisplayName = "Admin User",
+                Email = "admin@email.com",
+                UserName = "admin@email.com",
+                FirstName = "Admin",
+                LastName = "User",
+                EmailConfirmed = true,
+            },
+        ];
 
-        await EnsureUserAsync(new ApplicationUser
+        for (int i = 0; i < users.Length; i++)
         {
-            DisplayName = "Test Employee",
-            Email = "employee@email.com",
-            UserName = "employee@email.com",
-            FirstName = "Test",
-            LastName = "Employee",
-            EmailConfirmed = true,
-            ProfileUrl = "/img/profiles/user2.svg",
-        }, "p@55wOrd", [Roles.Employee]);
-
-        await EnsureUserAsync(new ApplicationUser
-        {
-            DisplayName = "Test Manager",
-            Email = "manager@email.com",
-            UserName = "manager@email.com",
-            FirstName = "Test",
-            LastName = "Manager",
-            EmailConfirmed = true,
-            ProfileUrl = "/img/profiles/user3.svg",
-        }, "p@55wOrd", [Roles.Manager, Roles.Employee]);
-
-        await EnsureUserAsync(new ApplicationUser
-        {
-            DisplayName = "Admin User",
-            Email = "admin@email.com",
-            UserName = "admin@email.com",
-            FirstName = "Admin",
-            LastName = "User",
-            EmailConfirmed = true,
-        }, "p@55wOrd", allRoles);
+            var user = users[i];
+            user.ProfileUrl ??= SvgCreator.CreateSvgDataUri(char.ToUpper(user.UserName![0]), 
+                    bgColor:SvgCreator.GetDarkColor(i));
+            var roles = user.UserName switch
+            {
+                "admin@email.com" => allRoles,
+                "manager@email.com" => ["Manager", "Employee"],
+                "employee@email.com" => ["Employee"],
+                _ => null,
+            };
+            await EnsureUserAsync(user, "p@55wOrd", roles);
+        }
     }
 }

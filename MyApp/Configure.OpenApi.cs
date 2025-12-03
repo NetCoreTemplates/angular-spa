@@ -1,4 +1,4 @@
-﻿using MyApp.Data;
+using ServiceStack;
 
 [assembly: HostingStartup(typeof(MyApp.ConfigureOpenApi))]
 
@@ -12,11 +12,11 @@ public class ConfigureOpenApi : IHostingStartup
             {
                 services.AddEndpointsApiExplorer();
                 services.AddSwaggerGen();
-
                 services.AddServiceStackSwagger();
-                services.AddBasicAuth<ApplicationUser>();
-                //services.AddJwtAuth();
-            
+                // services.AddBasicAuth<Data.ApplicationUser>();
+                // services.AddApiKeys();
+                // services.AddJwtAuth();
+           
                 services.AddTransient<IStartupFilter,StartupFilter>();
             }
         });

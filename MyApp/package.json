@@ -1,9 +1,15 @@
 {
-  "scripts": {
-    "dev": "dotnet watch",
-    "migrate": "dotnet run --AppTasks=migrate",
-    "revert:last": "dotnet run --AppTasks=migrate.revert:last",
-    "revert:all": "dotnet run --AppTasks=migrate.revert:all",
-    "rerun:last": "npm run revert:last && npm run migrate"
-  }
+    "scripts": {
+        "postinstall": "npm run migrate && node postinstall.js",
+        "dtos": "cd ../MyApp.Client && npx get-dtos ts",
+        "dev": "dotnet watch",
+        "ui:dev": "tailwindcss -i ./tailwind.input.css -o ./wwwroot/css/app.css --watch",
+        "ui:build": "tailwindcss -i ./tailwind.input.css -o ./wwwroot/css/app.css --minify",
+        "build": "npm run ui:build",
+        "migrate": "dotnet run --AppTasks=migrate",
+        "revert:last": "dotnet run --AppTasks=migrate.revert:last",
+        "revert:all": "dotnet run --AppTasks=migrate.revert:all",
+        "rerun:last": "npm run revert:last && npm run migrate",
+        "regen:bookings": "npx okai Bookings.d.ts"
+    }
 }

@@ -50,7 +50,7 @@ public class ConfigureBackgroundJobs : IHostingStartup
         });
 }
 
-public class JobsHostedService(ILogger<JobsHostedService> log, IBackgroundJobs jobs) : BackgroundService
+public class JobsHostedService(IBackgroundJobs jobs) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
