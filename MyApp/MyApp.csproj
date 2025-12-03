@@ -53,7 +53,7 @@
     <Exec Command="npm run ui:build" />
     <RemoveDir Directories="$(PublishDir)wwwroot" />
     <ItemGroup>
-      <CopyDist Include="../MyApp.Client/dist/**/*.*" />
+      <CopyDist Include="../MyApp.Client/dist/browser/**/*.*" />
       <CopyDist Include="./wwwroot/**/*.*" />
     </ItemGroup>
     <Copy SourceFiles="@(CopyDist)" DestinationFiles="@(CopyDist->'$(PublishDir)wwwroot\%(RecursiveDir)%(Filename)%(Extension)')" />
