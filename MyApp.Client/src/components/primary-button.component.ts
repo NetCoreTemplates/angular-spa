@@ -6,13 +6,21 @@ import { CommonModule } from '@angular/common';
     selector: 'primary-button',
     imports: [CommonModule, RouterLink],
     template: `
-    <button [routerLink]="href" [type]="type || 'button'" [class]="cls" [disabled]="disabled">
-        <ng-content></ng-content>
-    </button>
+    <ng-template #content><ng-content></ng-content></ng-template>
+    @if (href) {
+        <a [href]="href" [class]="cls">
+            <ng-container *ngTemplateOutlet="content"></ng-container>
+        </a>
+    } @else {
+        <button [routerLink]="routerLink" [type]="type || 'button'" [class]="cls" [disabled]="disabled">
+            <ng-container *ngTemplateOutlet="content"></ng-container>
+        </button>
+    }
   `,
 })
 export class PrimaryButtonComponent {
     @Input() type: 'submit' | 'button' | 'reset' = 'submit';
+    @Input() routerLink?: string;
     @Input() href?: string;
     @Input() disabled = false;
     @Input() color: 'blue' | 'purple' | 'red' | 'green' | 'sky' | 'cyan' | 'indigo' = 'indigo';

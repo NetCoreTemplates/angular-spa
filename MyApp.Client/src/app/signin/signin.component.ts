@@ -36,7 +36,6 @@ export class SignInComponent implements OnInit {
         provider: 'credentials',
         userName: '',
         password: '',
-        rememberMe: false
     }));
     signedIn = this.authService.signedIn;
 

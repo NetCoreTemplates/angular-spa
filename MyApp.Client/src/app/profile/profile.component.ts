@@ -1,6 +1,7 @@
 import { Component, computed, inject } from "@angular/core";
 import { PageComponent } from "../page.component";
 import { SrcPageComponent } from "src/shared/src-page.component";
+import { RouterLink } from '@angular/router';
 import { tailwindComponents } from "src/components";
 import { AuthService } from "src/services/auth.service";
 import { MetadataService } from "src/components/services/metadata.service";
@@ -10,6 +11,7 @@ import { svgToDataUri } from "src/components/files";
     selector: 'app-profile',
     templateUrl: './profile.component.html',
     imports: [
+        RouterLink,
         PageComponent,
         SrcPageComponent,
         ...tailwindComponents(),

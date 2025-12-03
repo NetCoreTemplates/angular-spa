@@ -8,14 +8,22 @@ type ButtonType = 'submit' | 'button' | 'reset';
     selector: 'secondary-button',
     imports: [CommonModule, RouterLink],
     template: `
-    <button [routerLink]="href" [type]="type" [class]="buttonClass" [disabled]="disabled">
-        <ng-content></ng-content>
-    </button>
+    <ng-template #content><ng-content></ng-content></ng-template>
+    @if (href) {
+        <a [href]="href" [class]="buttonClass">
+            <ng-container *ngTemplateOutlet="content"></ng-container>
+        </a>
+    } @else {
+        <button [routerLink]="routerLink" [type]="type" [class]="buttonClass" [disabled]="disabled">
+            <ng-container *ngTemplateOutlet="content"></ng-container>
+        </button>
+    }
    `
 })
 export class SecondaryButtonComponent {
     @Input() type: ButtonType = 'button';
     @Input() disabled = false;
+    @Input() routerLink?: string;
     @Input() href?: string;
 
     // CSS class equivalent to the Vue component's 'cls' constant

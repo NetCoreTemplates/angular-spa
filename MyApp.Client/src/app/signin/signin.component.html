@@ -2,15 +2,13 @@
     <section class="mt-4 sm:shadow overflow-hidden sm:rounded-md">
         <form (submit)="onSubmit($event)">
             <div class="shadow overflow-hidden sm:rounded-md">
-                <error-summary except="userName,password,rememberMe"></error-summary>
+                <error-summary except="userName,password"></error-summary>
                 <div class="px-4 py-5 bg-white dark:bg-black space-y-6 sm:p-6">
                     <div class="flex flex-col gap-y-4">
                         <text-input id="userName" name="userName" help="Email you signed up with" autoComplete="email"
                             [(ngModel)]="request().userName"></text-input>
                         <text-input id="password" name="password" type="password" help="6 characters or more"
                             autoComplete="current-password" [(ngModel)]="request().password"></text-input>
-                        <checkbox-input id="rememberMe" name="rememberMe"
-                            [(ngModel)]="request().rememberMe"></checkbox-input>
                     </div>
 
                     <div>
