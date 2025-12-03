@@ -6,13 +6,12 @@
 
 > Browse [source code](https://github.com/NetCoreTemplates/angular-spa), view live demo [angular-spa.web-templates.io](http://angular-spa.web-templates.io) and install with [dotnet-new](https://docs.servicestack.net/dotnet-new):
 
-    $ dotnet tool install -g x
+## Quick Start
 
-    $ x new angular-spa ProjectName
+```bash
+npx create-net angular-spa MyProject
+```
 
-Alternatively write new project files directly into an empty repository, using the Directory Name as the ProjectName:
+## Jumpstart with Copilot
 
-    $ git clone https://github.com/<User>/<ProjectName>.git
-    $ cd <ProjectName>
-    $ x new angular-spa
-
+Instantly [scaffold a new App with this template](https://github.com/new?template_name=angular-spa&template_owner=NetCoreTemplates) using GitHub Copilot, just describe the features you want and watch Copilot build it!
