@@ -1,0 +1,19 @@
+﻿@page
+@using Microsoft.AspNetCore.Html
+@{
+    ViewData["Title"] = "API Keys";
+    ViewData["ActivePage"] = ManageNavPages.ApiKeys;
+}
+
+<div>
+    <h1 class="mb-4 text-2xl font-semibold text-gray-900 dark:text-gray-100">
+        @ViewData["Title"]
+    </h1>
+    <div data-component="pages/Account/Manage/ManageUserApiKeys.mjs" data-props="@ToProps()"></div>
+</div>
+
+@{
+    IHtmlContent ToProps() => Html.Raw(new {
+        info = HostContext.AppHost.GetPlugin<ApiKeysFeature>()?.GetApiKeyInfo(),
+    }.ToJson().HtmlEncode());
+}

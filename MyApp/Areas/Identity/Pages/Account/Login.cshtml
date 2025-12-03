@@ -1,0 +1,189 @@
+﻿@page
+@using ServiceStack.Mvc
+@using ServiceStack
+@model LoginModel
+@{
+    ViewData["Title"] = "Sign In";
+    ViewData["LoginPath"] = "/Account/Login";
+    ViewData["ReturnUrl"] = "/Account/Login";
+}
+
+@inject SignInManager<ApplicationUser> SignInManager
+
+<div class="mt-8">
+@if (!SignInManager.IsSignedIn(User))
+{
+    <div class="max-w-xl mx-auto">
+        <h1 class="mb-4 text-2xl font-semibold text-gray-900 dark:text-gray-100">
+            Sign In
+        </h1>    
+        <div class="sm:shadow overflow-hidden sm:rounded-md">
+            <form method="post">
+                <div class="px-4 bg-white dark:bg-black sm:p-6">
+                    <div asp-validation-summary="All" class="text-danger font-semibold text-center"></div>
+                    <div class="flex flex-col gap-y-4">
+                        <div>
+                            <input type="hidden" name="redirect" value="@(Html.GetQueryString("ReturnUrl") ?? ViewData["ReturnUrl"])" />
+                        </div>
+                        <div>
+                            <div>
+                                <label for="UserName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                                <div class="mt-1 relative">
+                                    <input type="text" class="@Css.InputText" id="Email" name="Email" placeholder="Email" spellcheck="false" value="@Html.GetFormData("Email")">
+                                </div>
+                            </div>                            
+                        </div>
+                        <div>
+                            <div>
+                                <label for="UserName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+                                <div class="mt-1 relative">
+                                    <input class="@Css.InputText" id="Password" name="Password" type="Password" placeholder="Password" value="">
+                                </div>
+                            </div>                            
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="chkRememberMe" name="rememberMe" value="true" checked="checked"
+                                       class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                <label for="chkRememberMe" class="ml-2 block text-sm text-gray-900">Remember Me</label>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <div class="px-4 py-3 text-right sm:px-6">
+                    <div class="flex justify-end">
+                        <a class="@Css.SecondaryButton w-1/2" asp-area="Identity" asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register New User</a>
+                        <button type="submit" class="@Css.PrimaryButton w-1/2 ml-2">Sign In</button>
+                    </div>
+                </div>
+                <div class="px-4 py-3 sm:px-6">
+                    <p class="mb-3">
+                        <a id="forgot-password" asp-area="Identity" asp-page="./ForgotPassword" class="@Css.Link">Forgot your password?</a>
+                    </p>
+                    <p class="mb-3">
+                        <a id="resend-confirmation" asp-area="Identity" asp-page="./ResendEmailConfirmation" class="@Css.Link">Resend email confirmation</a>
+                    </p>
+                </div>
+            </form>        
+            
+            <div class="m-6">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300 dark:border-gray-700"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="bg-white dark:bg-black px-2 text-gray-500">Or continue with</span>
+                    </div>
+                </div>
+                <div>
+                    @{
+                        var loginProviders = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+                        if (loginProviders.Count == 0)
+                        {
+                            <div>
+                                <p>
+                                    There are no external authentication services configured. See <a class="@Css.Link" href="https://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
+                                    for details on setting up this ASP.NET application to support logging in via external services.
+                                </p>
+                            </div>
+                        }
+                        else
+                        {
+                            <form asp-area="Identity" asp-page="/Account/ExternalLogin" asp-route-returnurl="@Model.ReturnUrl" method="post" 
+                                  class="mt-6 grid grid-cols-4 gap-3">
+                                @foreach (var provider in loginProviders)
+                                {
+                                    <div>
+                                        <button type="submit" class="inline-flex w-full justify-center rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-black py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50" 
+                                                name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                                            <span class="sr-only">Sign in with @provider.Name</span>
+                                            <i class="text-gray-700 dark:text-gray-300 text-lg fab fa-@provider.Name.ToLower()"></i>
+                                        </button>
+                                    </div>
+                                }
+                            </form>
+                        }
+                    }
+                </div>
+            </div>
+        
+            </div>
+
+        <div class="mt-8">
+            <b>Quick Login</b>
+            <div class="mt-2">
+                <span class="@Css.SecondaryButton px-3 mb-1" data-click="switchUser:test@@email.com">test@@email.com</span>
+                <span class="@Css.SecondaryButton px-3 mb-1" data-click="switchUser:employee@@email.com">employee@@email.com</span>
+                <span class="@Css.SecondaryButton px-3 mb-1" data-click="switchUser:manager@@email.com">manager@@email.com</span>
+                <span class="@Css.SecondaryButton px-3 mb-1" data-click="switchUser:admin@@email.com">admin@@email.com</span>
+                <span class="@Css.SecondaryButton px-3 mb-1" data-click="switchUser:new@@user.com">new@@user.com</span>
+            </div>
+        </div>
+    </div>    
+}
+else
+{
+    <div class="mx-auto prose prose-xl">
+        <table id="session-info">
+            <caption class="@Css.H1 mb-4">Authenticated User Session</caption>
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>@User.GetUserId()</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>@User.GetEmail()</td>
+                </tr>
+                <tr>
+                    <th>DisplayName</th>
+                    <td>@User.GetDisplayName()</td>
+                </tr>
+                @if (User.GetRoles().Length > 0)
+                {
+                    <tr>
+                        <th>Roles</th>
+                        <td>@User.GetRoles().Join(", ")</td>
+                    </tr>
+                }
+                <tr>
+                    <th>ProfileUrl</th>
+                    <td>
+                        <img class="w-20 h-20" src="@User.GetPicture()" />
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2">
+                        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                            <button type="submit" class="mx-2 @Css.SecondaryButton">Sign Out</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <p class="my-2">View Public and Secure Pages and APIs on <a class="@Css.Link" href="/">Home page</a>.</p>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+}
+</div>
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+<script type="module">
+import { $1, bindHandlers } from "@@servicestack/client"
+bindHandlers({
+   switchUser(u) {
+       $1("#Email").value = u
+       $1("#Password").value = 'p@55wOrd'
+   },
+})  
+</script>
+}

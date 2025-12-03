@@ -1,0 +1,42 @@
+﻿@page
+@model ExternalLoginModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="mt-8 mx-auto max-w-lg">
+    <div>
+        <h1 class="@Css.H1 mb-4">@ViewData["Title"]</h1>
+        <h4 class="@Css.H4">Associate your @Model.ProviderDisplayName account.</h4>
+    </div>
+
+    @await Html.PartialAsync("AlertInfo", $@"You've successfully authenticated with <strong>{Model.ProviderDisplayName}</strong>.
+        Please enter an email address for this site below and click the Register button to finish
+        logging in.")
+
+    <div class="mt-3 shadow overflow-hidden sm:rounded-md">
+        <div class="px-4 bg-white dark:bg-black sm:p-6">
+            <form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger text-center font-semibold"></div>
+                <div class="flex flex-col gap-y-4">
+                    <div>
+                        <div>
+                            <label asp-for="Input.Email" class="block text-sm font-medium text-gray-700 dark:text-gray-300"></label>
+                            <div class="mt-1 relative">
+                                <input type="text" class="@Css.InputText" asp-for="Input.Email" spellcheck="false">
+                            </div>
+                            <p asp-validation-for="Input.Email" class="text-danger"></p>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit" class="@Css.PrimaryButton">Register</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,10 @@
+<Solution>
+  <Project Path="MyApp.Client/MyApp.Client.esproj">
+    <BuildType Project="Debug" />
+    <Build />
+  </Project>
+  <Project Path="MyApp.ServiceInterface/MyApp.ServiceInterface.csproj" />
+  <Project Path="MyApp.ServiceModel/MyApp.ServiceModel.csproj" />
+  <Project Path="MyApp.Tests/MyApp.Tests.csproj" />
+  <Project Path="MyApp/MyApp.csproj" />
+</Solution>

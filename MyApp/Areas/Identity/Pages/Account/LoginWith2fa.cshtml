@@ -1,0 +1,50 @@
+﻿@page
+@model LoginWith2faModel
+@{
+    ViewData["Title"] = "Two-factor authentication";
+}
+
+<div class="mt-8 mx-auto max-w-lg">
+    <h1 class="@Css.H1">@ViewData["Title"]</h1>
+    <p class="my-4">Your login is protected with an authenticator app. Enter your authenticator code below.</p>
+    <div class="mt-3 shadow overflow-hidden sm:rounded-md">
+        <div class="px-4 bg-white dark:bg-black sm:p-6">
+            <form method="post" asp-route-returnUrl="@ViewData["ReturnUrl"]">
+                <input asp-for="ReturnUrl" type="hidden" />
+                <input asp-for="RememberMe" type="hidden" />
+                <DataAnnotationsValidator />
+                <ValidationSummary class="mb-3 text-danger text-center font-semibold" />
+
+                <div class="flex flex-col gap-y-4">
+                    <div>
+                        <label asp-for="Input.TwoFactorCode" class="@Css.LabelClasses" />
+                        <div class="mt-1 relative">
+                            <input type="text" asp-for="Input.TwoFactorCode" class="@Css.InputText" autocomplete="off" />
+                        </div>
+                        <span asp-validation-for="Input.TwoFactorCode" class="mt-2 text-danger text-sm"></span>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input asp-for="Input.RememberMachine" class="ml-2 block text-sm text-gray-900 dark:text-gray-50 select-none"/>
+                            <label for="remember-machine" class="ml-2 block text-sm text-gray-900 dark:text-gray-50 select-none">
+                                Remember this machine
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit" class="@Css.PrimaryButton">Log in</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <p class="mt-4">
+        Don't have access to your authenticator device? You can
+        <a class="@Css.Link" id="recovery-code-login" asp-page="./LoginWithRecoveryCode" asp-route-returnUrl="@Model.ReturnUrl">log in with a recovery code</a>.
+    </p>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

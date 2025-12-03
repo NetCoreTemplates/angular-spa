@@ -1,0 +1,71 @@
+<header class="border-b border-gray-200 dark:border-gray-700 pr-3 bg-white dark:bg-gray-800">
+    <div class="flex flex-wrap items-center">
+        <div class="flex-shrink flex-grow-0">
+            <div class="cursor-pointer">
+                <a href="/">
+                    <div class="p-4 cursor-pointer"><img class="w-8 h-8" src="/assets/img/logo.svg" alt="MyApp logo" /></div>
+                </a>
+            </div>
+        </div>
+        <div class="flex flex-grow flex-shrink flex-nowrap justify-end items-center">
+            <nav class="relative flex flex-grow">
+                <ul class="flex flex-wrap items-center justify-end w-full m-0">
+                    @{
+                        var isAuthenticated = await Html.IsAuthenticatedAsync();
+                        var isAdmin = await Html.HasRoleAsync("Admin");
+                        void RenderNavLink(string href, string childContent)
+                        {
+                            <li class="relative flex flex-wrap just-fu-start m-0">
+                                <a href="@href" class="@Html.ClassNames("p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400", 
+                                    Html.MatchesPath(href) ? "text-blue-700 dark:text-blue-300" : "")">
+                                    @Html.Raw(childContent)
+                                </a>
+                            </li>
+                        }
+                        void RenderLinkButton(string href, string childContent, string? cls = null)
+                        {
+                            <li class="relative flex flex-wrap just-fu-start m-0">
+                                <a href="@href" class="m-2 @(cls ?? Css.SecondaryButton)">
+                                    @Html.Raw(childContent)
+                                </a>
+                            </li>
+                        }
+
+                        RenderNavLink("/bookings-auto", "Bookings");
+                        if (!isAuthenticated)
+                        {
+                            RenderLinkButton("/Identity/Account/Login", "Sign In");
+                        }
+                        else
+                        {
+                            <li>
+                                <div class="mx-3 relative">
+                                    <div>
+                                        <a href="/Identity/Account/Manage"
+                                           class="max-w-xs rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 lg:p-2 lg:rounded-md lg:hover:bg-gray-50 dark:lg:hover:bg-gray-900 dark:ring-offset-black"
+                                           id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                                            <img class="h-8 w-8 rounded-full" src="@User.GetPicture()" alt="">
+                                            <span class="ml-3 text-gray-700 dark:text-gray-300 text-sm font-medium lg:block">
+                                                <span class="sr-only">Open user menu for </span>
+                                                @User.GetDisplayName()
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="mr-3 relative flex flex-wrap just-fu-start m-0">
+                                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                                    <button type="submit" class="@Css.SecondaryButton">Sign Out</button>
+                                </form>
+                            </li>
+                        }
+                    }
+                    <li class="relative flex flex-wrap just-fu-start m-0">
+                        @await Html.PartialAsync("DarkModeToggle")
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+</header>

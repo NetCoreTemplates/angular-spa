@@ -1,0 +1,36 @@
+@using MyApp.Data
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+    var navItemCss = "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 hover:text-gray-900 dark:hover:text-gray-50 group flex items-center px-4 py-2 text-base font-medium rounded-md mr-2 whitespace-nowrap";
+}
+
+<ul>
+    <li class="@ManageNavPages.IndexNavClass(ViewContext)">
+        <a class="@navItemCss" asp-page="./Index">Profile</a>
+    </li>
+    <li class="@ManageNavPages.EmailNavClass(ViewContext)">
+        <a class="@navItemCss" asp-page="./Email">Email</a>
+    </li>
+    <li class="@ManageNavPages.ChangePasswordNavClass(ViewContext)">
+        <a class="@navItemCss" asp-page="./ChangePassword">Password</a>
+    </li>
+    @if (hasExternalLogins)
+    {
+        <li class="@ManageNavPages.ExternalLoginsNavClass(ViewContext)">
+            <a class="@navItemCss" asp-page="./ExternalLogins">External logins</a>
+        </li>
+    }
+    <li class="@ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)">
+        <a class="@navItemCss" asp-page="./TwoFactorAuthentication">Two-factor authentication</a>
+    </li>
+    <li class="@ManageNavPages.PersonalDataNavClass(ViewContext)">
+        <a class="@navItemCss" asp-page="./PersonalData">Personal data</a>
+    </li>
+    @if (HostContext.AppHost.HasPlugin<ApiKeysFeature>())
+    {
+        <li class="@ManageNavPages.ApiKeysNavClass(ViewContext)">
+            <a class="@navItemCss" asp-page="./ApiKeys">API Keys</a>
+        </li>
+    }
+</ul>

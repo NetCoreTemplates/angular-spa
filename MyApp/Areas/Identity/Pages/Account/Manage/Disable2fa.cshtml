@@ -1,0 +1,29 @@
+﻿@page
+@model Disable2faModel
+@{
+    ViewData["Title"] = "Disable two-factor authentication (2FA)";
+    ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
+}
+
+<partial name="_StatusMessage" for="StatusMessage" />
+
+<h1 class="mb-4 text-2xl font-semibold text-gray-900 dark:text-gray-100">
+    @ViewData["Title"]
+</h1>
+
+<div class="text-yellow-700 rounded-md bg-yellow-50 p-4 max-w-screen-md" role="alert">
+    <p>
+        <strong>This action only disables 2FA.</strong>
+    </p>
+    <p class="my-2 text-yellow-700">
+        Disabling 2FA does not change the keys used in authenticator apps. If you wish to change the key
+        used in an authenticator app you should 
+        <a class="@Css.Link" asp-page="./ResetAuthenticator">reset your authenticator keys.</a>
+    </p>
+</div>
+
+<div>
+    <form method="post">
+        <button class="@Css.DangerButton" type="submit">Disable 2FA</button>
+    </form>
+</div>

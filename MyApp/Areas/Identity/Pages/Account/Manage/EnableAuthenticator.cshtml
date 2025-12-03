@@ -1,0 +1,66 @@
+﻿@page
+@model EnableAuthenticatorModel
+@{
+    ViewData["Title"] = "Configure authenticator app";
+    ViewData["ActivePage"] = ManageNavPages.TwoFactorAuthentication;
+}
+
+<partial name="_StatusMessage" for="StatusMessage" />
+<h1 class="mb-4 text-2xl font-semibold text-gray-900 dark:text-gray-100">
+    @ViewData["Title"]
+</h1>
+<div>
+    <p>To use an authenticator app go through the following steps:</p>
+    <ol class="list-decimal ml-8">
+        <li>
+            <p class="my-2">
+                Download a two-factor authenticator app like Microsoft Authenticator for
+                <a class="@Css.Link" href="https://go.microsoft.com/fwlink/?Linkid=825071">Windows Phone</a>,
+                <a class="@Css.Link" href="https://go.microsoft.com/fwlink/?Linkid=825072">Android</a> and
+                <a class="@Css.Link" href="https://go.microsoft.com/fwlink/?Linkid=825073">iOS</a> or
+                Google Authenticator for
+                <a class="@Css.Link" href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en">Android</a> and
+                <a class="@Css.Link" href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>.
+            </p>
+        </li>
+        <li class="not-prose">
+            <p class="my-2">
+                Scan the QR Code or enter this key <kbd class="bg-gray-100 dark:bg-gray-700 p-1 px-2 rounded-sm">@Model.SharedKey</kbd> into your two factor authenticator app. Spaces and casing do not matter.
+            </p>
+            @await Html.PartialAsync("AlertInfo", 
+                $@"Learn how to <a class=""font-semibold text-indigo-700 hover:text-indigo-500"" href=""https://go.microsoft.com/fwlink/?Linkid=852423"">enable QR code generation</a>.")
+
+            <div id="qrCode"></div>
+            <div id="qrCodeData" data-url="@Model.AuthenticatorUri"></div>
+            
+            <script src="/lib/qrcode.min.js"></script>
+            <script>
+            new QRCode(document.getElementById('qrCode'), 
+                document.getElementById('qrCodeData').dataset.url)
+            </script>            
+        </li>
+        <li>
+            <p class="my-2">
+                Once you have scanned the QR code or input the key above, your two factor authentication app will provide you
+                with a unique code. Enter the code in the confirmation box below.
+            </p>
+            <div>
+                <div class="max-w-xs">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label asp-for="Input.Code" class="font-semibold">Verification Code</label>
+                            <input asp-for="Input.Code" class="@Css.InputText" autocomplete="off" />
+                            <span asp-validation-for="Input.Code" class="text-danger"></span>
+                        </div>
+                        <button type="submit" class="@Css.SecondaryButton">Verify</button>
+                        <div asp-validation-summary="ModelOnly" class="text-danger text-center font-semibold"></div>
+                    </form>
+                </div>
+            </div>
+        </li>
+    </ol>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

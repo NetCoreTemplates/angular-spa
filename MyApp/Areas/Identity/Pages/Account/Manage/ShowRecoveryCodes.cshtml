@@ -1,0 +1,29 @@
+﻿@page
+@model ShowRecoveryCodesModel
+@{
+    ViewData["Title"] = "Recovery codes";
+    ViewData["ActivePage"] = "TwoFactorAuthentication";
+}
+
+<h3 class="@Css.H3">@ViewData["Title"]</h3>
+<div class="max-w-xl">
+    <partial name="_StatusMessage" for="StatusMessage" />
+
+    <p class="my-3">
+        <strong>Put these codes in a safe place.</strong>
+    </p>
+    @await Html.PartialAsync("AlertWarning", "If you lose your device and don't have the recovery codes you will lose access to your account.")
+
+    <div class="mt-4">
+        @for (var row = 0; row < Model.RecoveryCodes.Length; row += 2)
+        {
+            <code class="recovery-code">@Model.RecoveryCodes[row]</code>
+
+            <text>&nbsp;</text>
+
+            <code class="recovery-code">@Model.RecoveryCodes[row + 1]</code>
+
+            <br />
+        }
+    </div>
+</div>

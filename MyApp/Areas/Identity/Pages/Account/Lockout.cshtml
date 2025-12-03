@@ -1,0 +1,12 @@
+﻿@page
+@model LockoutModel
+@{
+    ViewData["Title"] = "Locked out";
+}
+
+<div class="mt-8 flex justify-center">
+    <div>
+        <h2 class="@Css.H2 text-danger">@ViewData["Title"]</h2>
+        <p class="my-4 text-danger">This account has been locked out, please try again later.</p>
+    </div>
+</div>

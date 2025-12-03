@@ -1,0 +1,79 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="mt-8">
+    <div class="max-w-xl mx-auto">
+        <h1 class="mb-4 text-2xl font-semibold text-gray-900 dark:text-gray-100">
+            Create a new account.
+        </h1>
+        <div class="sm:shadow overflow-hidden sm:rounded-md">
+            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="px-4 bg-white dark:bg-black sm:p-6">
+                <div asp-validation-summary="All" class="text-danger text-center font-semibold"></div>
+                <div class="flex flex-col gap-y-4">
+                    <div>
+                        <label asp-for="Input.Email" class="block text-sm font-medium text-gray-700 dark:text-gray-300"></label>
+                        <div class="mt-1 relative">
+                            <input type="text" class="@Css.InputText" asp-for="Input.Email" spellcheck="false">
+                        </div>
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Input.Password" class="block text-sm font-medium text-gray-700 dark:text-gray-300"></label>
+                        <div class="mt-1 relative">
+                            <input type="password" class="@Css.InputText" asp-for="Input.Password" spellcheck="false">
+                        </div>
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Input.ConfirmPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300"></label>
+                        <div class="mt-1 relative">
+                            <input type="password" class="@Css.InputText" asp-for="Input.ConfirmPassword" spellcheck="false">
+                        </div>
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <button type="submit" class="@Css.PrimaryButton">Register</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="mt-8">
+            <section>
+                <h3 class="@Css.H3">Use another service to register.</h3>
+                @{
+                    if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                    {
+                        <div>
+                            <p>
+                                There are no external authentication services configured. See this
+                                <a class="@Css.Link" href="https://go.microsoft.com/fwlink/?LinkID=532715">
+                                    article about setting up this ASP.NET application to support logging in via external services
+                                </a>.
+                            </p>
+                        </div>
+                    }
+                    else
+                    {
+                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                            <div>
+                                <p>
+                                    @foreach (var provider in Model.ExternalLogins!)
+                                    {
+                                        <button type="submit" class="@Css.SecondaryButton" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                    }
+                                </p>
+                            </div>
+                        </form>
+                    }
+                }
+            </section>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

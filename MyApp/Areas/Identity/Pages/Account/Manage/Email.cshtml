@@ -1,0 +1,61 @@
+﻿@page
+@model EmailModel
+@{
+    ViewData["Title"] = "Manage Email";
+    ViewData["ActivePage"] = ManageNavPages.Email;
+}
+
+<h3 class="@Css.H3">@ViewData["Title"]</h3>
+
+<div class="max-w-xl">
+    <partial name="_StatusMessage" for="StatusMessage" />
+
+    <div class="mt-3 shadow overflow-hidden sm:rounded-md">
+        <div class="px-4 bg-white dark:bg-black sm:p-6">
+            <form id="email-form" method="post">
+                <AntiforgeryToken />
+                <DataAnnotationsValidator />
+                <div asp-validation-summary="All" class="text-danger text-center font-semibold"></div>
+
+                <div class="flex flex-col gap-4">
+                    @if (Model.IsEmailConfirmed)
+                    {
+                        <div>
+                            <label asp-for="Email" class="@Css.LabelClasses"></label>
+                            <div class="mt-1 relative flex">
+                                <input asp-for="Email" class="@Css.InputText" placeholder="Please enter your email." disabled />
+                                <div class="ml-4">
+                                    <span class="text-xl text-success font-bold">✓</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div>
+                            <label asp-for="Email" class="@Css.LabelClasses"></label>
+                            <div class="mt-1 relative">
+                                <input asp-for="Email" class="@Css.InputText" placeholder="Please enter your email." disabled />
+                            </div>
+                            <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="mt-2 @Css.SecondaryButton">Send verification email</button>
+                        </div>
+                    }
+                    <div>
+                        <label for="new-email" class="@Css.LabelClasses">New email</label>
+                        <div class="mt-1 relative">
+                            <input asp-for="Input.NewEmail" class="@Css.InputText" autocomplete="email" aria-required="true" placeholder="Please enter new email." />
+                        </div>
+                        <span asp-validation-for="Input.NewEmail" class="mt-2 text-danger text-sm"></span>
+                    </div>
+                    <div>
+                        <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="@Css.PrimaryButton">Change email</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

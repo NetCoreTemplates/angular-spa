@@ -1,0 +1,31 @@
+﻿@{
+    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout !=  null)
+    {
+        Layout = parentLayout.ToString();
+    }
+    else
+    {
+        // Layout = "/Areas/Identity/Pages/_Layout.cshtml";
+        Layout = "/Pages/Shared/_Layout.cshtml";
+    }
+}
+
+<div class="ml-72 max-w-screen-md">
+    <h2 class="@Css.H2">Manage your account</h2>
+</div>
+
+<div>
+    <h4 class="font-semibold text-lg border-b border-gray-300 dark:border-gray-600 pb-2 m-2">Change your account settings</h4>
+    <div class="flex flex-wrap">
+        <div class="grow-0">
+            @await Html.PartialAsync("_ManageNav")
+        </div>
+        <div class="grow p-4 sm:pl-16 max-w-screen-md">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await RenderSectionAsync("Scripts", required: false)
+}

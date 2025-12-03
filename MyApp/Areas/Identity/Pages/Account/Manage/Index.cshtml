@@ -1,0 +1,44 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Profile";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+<div class="">
+    <div class="max-w-xl">
+        <h1 class="mb-4 text-2xl font-semibold text-gray-900 dark:text-gray-100">
+            @ViewData["Title"]
+        </h1>
+        <div>
+            @await Html.PartialAsync("_StatusMessage", Model.StatusMessage)
+        </div>
+        <div class="shadow overflow-hidden sm:rounded-md">
+            <form method="post" class="px-4 bg-white dark:bg-black sm:p-6">
+                <div asp-validation-summary="All" class="text-danger text-center font-semibold"></div>
+                <div class="flex flex-col gap-y-4">
+                    <div>
+                        <label asp-for="Username" class="block text-sm font-medium text-gray-700 dark:text-gray-300"></label>
+                        <div class="mt-1 relative">
+                            <input type="text" class="@Css.InputText" asp-for="Username" disabled>
+                        </div>
+                    </div>
+                    <div>
+                        <label asp-for="Input.PhoneNumber" class="block text-sm font-medium text-gray-700 dark:text-gray-300"></label>
+                        <div class="mt-1 relative">
+                            <input type="text" class="@Css.InputText" asp-for="Input.PhoneNumber">
+                        </div>
+                        <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <button type="submit" class="@Css.PrimaryButton">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

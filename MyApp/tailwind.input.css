@@ -1,0 +1,423 @@
+@import "tailwindcss";
+@source "../MyApp.Client/public/";
+
+/* Custom theme configuration */
+@theme {
+  /* Custom colors */
+  --color-accent-1: #fafafa;
+  --color-accent-2: #eaeaea;
+  --color-accent-7: #333;
+  --color-success: #0070f3;
+  --color-cyan: #79ffe1;
+
+  /* shadcn/ui colors - Light mode */
+  --color-background: hsl(0 0% 100%);
+  --color-foreground: hsl(222.2 84% 4.9%);
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(222.2 84% 4.9%);
+  --color-popover: hsl(0 0% 100%);
+  --color-popover-foreground: hsl(222.2 84% 4.9%);
+  --color-primary: hsl(221.2 83.2% 43%);
+  --color-primary-foreground: hsl(0 0% 100%);
+  --color-secondary: hsl(210 40% 96.1%);
+  --color-secondary-foreground: hsl(222.2 47.4% 11.2%);
+  --color-muted: hsl(210 40% 96.1%);
+  --color-muted-foreground: hsl(215.4 16.3% 46.9%);
+  --color-accent: hsl(210 40% 96.1%);
+  --color-accent-foreground: hsl(222.2 47.4% 11.2%);
+  --color-destructive: hsl(0 72% 51%);
+  --color-destructive-foreground: hsl(0 0% 100%);
+  --color-border: hsl(214.3 31.8% 91.4%);
+  --color-input: hsl(214.3 31.8% 91.4%);
+  --color-ring: hsl(221.2 83.2% 53.3%);
+  --color-chart-1: hsl(12 76% 61%);
+  --color-chart-2: hsl(173 58% 39%);
+  --color-chart-3: hsl(197 37% 24%);
+  --color-chart-4: hsl(43 74% 66%);
+  --color-chart-5: hsl(27 87% 67%);
+
+  /* Custom spacing */
+  --spacing-28: 7rem;
+
+  /* Custom letter spacing */
+  --letter-spacing-tighter: -0.04em;
+
+  /* Custom line height */
+  --line-height-tight: 1.2;
+
+  /* Custom font sizes */
+  --font-size-5xl: 2.5rem;
+  --font-size-6xl: 2.75rem;
+  --font-size-7xl: 4.5rem;
+  --font-size-8xl: 6.25rem;
+
+  /* Custom box shadows */
+  --shadow-small: 0 5px 10px rgb(0 0 0 / 0.12);
+  --shadow-medium: 0 8px 30px rgb(0 0 0 / 0.12);
+
+  /* Border radius */
+  --radius-lg: 0.5rem;
+  --radius-md: calc(0.5rem - 2px);
+  --radius-sm: calc(0.5rem - 4px);
+}
+
+@theme dark {
+  /* shadcn/ui colors - Dark mode */
+  --color-background: hsl(222.2 84% 4.9%);
+  --color-foreground: hsl(210 40% 98%);
+  --color-card: hsl(222.2 84% 4.9%);
+  --color-card-foreground: hsl(210 40% 98%);
+  --color-popover: hsl(222.2 84% 4.9%);
+  --color-popover-foreground: hsl(210 40% 98%);
+  --color-primary: hsl(217.2 91.2% 54%);
+  --color-primary-foreground: hsl(0 0% 100%);
+  --color-secondary: hsl(217.2 32.6% 17.5%);
+  --color-secondary-foreground: hsl(210 40% 98%);
+  --color-muted: hsl(217.2 32.6% 17.5%);
+  --color-muted-foreground: hsl(215 20.2% 65.1%);
+  --color-accent: hsl(217.2 32.6% 17.5%);
+  --color-accent-foreground: hsl(210 40% 98%);
+  --color-destructive: hsl(0 72% 51%);
+  --color-destructive-foreground: hsl(0 0% 100%);
+  --color-border: hsl(217.2 32.6% 17.5%);
+  --color-input: hsl(217.2 32.6% 17.5%);
+  --color-ring: hsl(224.3 76.3% 48%);
+  --color-chart-1: hsl(220 70% 50%);
+  --color-chart-2: hsl(160 60% 45%);
+  --color-chart-3: hsl(30 80% 55%);
+  --color-chart-4: hsl(280 65% 60%);
+  --color-chart-5: hsl(340 75% 55%);
+}
+
+@variant dark (.dark &);
+
+/* Accordion animations */
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@layer base {
+    /* @tailwindcss/forms css */
+    [type='text'],[type='email'],[type='url'],[type='password'],[type='number'],[type='date'],[type='datetime-local'],[type='month'],[type='week'],[type='search'],[type='tel'],[type='time'],[type='color'],[multiple],textarea,select
+    {-webkit-appearance:none;-moz-appearance:none;appearance:none;background-color:#fff;border-width:1px;padding:0.5rem 0.75rem;font-size:1rem}
+    [type='text']:focus,[type='email']:focus,[type='url']:focus,[type='password']:focus,[type='number']:focus,[type='date']:focus,[type='datetime-local']:focus,[type='month']:focus,[type='week']:focus,[type='search']:focus,[type='tel']:focus,[type='time']:focus,[type='color']:focus,[multiple]:focus,textarea:focus,select:focus{
+        outline:2px solid transparent;outline-offset:2px;--tw-ring-inset:var(--tw-empty,/*!*/ /*!*/);
+        --tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:#2563eb;
+        --tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+        --tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+        box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000);border-color:#2563eb;}
+    input::-moz-placeholder,textarea::-moz-placeholder{color:#6b7280;opacity:1}
+    input:-ms-input-placeholder,textarea:-ms-input-placeholder{color:#6b7280;opacity:1}
+    input::placeholder,textarea::placeholder{color:#6b7280;opacity:1}
+    select{
+        background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position:right 0.5rem center;background-repeat:no-repeat;background-size:1.5em 1.5em;padding-right:2.5rem;-webkit-print-color-adjust:exact;color-adjust:exact}
+    [multiple]{
+        background-image:initial;background-position:initial;background-repeat:unset;background-size:initial;padding-right:0.75rem;-webkit-print-color-adjust:unset;color-adjust:unset;}
+    [type='checkbox'],[type='radio']{
+        -webkit-appearance:none;-moz-appearance:none;appearance:none;padding:0;-webkit-print-color-adjust:exact;color-adjust:exact;display:inline-block;
+        vertical-align:middle;background-origin:border-box;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;
+        flex-shrink:0;height:1rem;width:1rem;color:#2563eb;background-color:#fff;border-width:1px}
+    [type='radio']{border-radius:100%}
+    [type='checkbox']:focus,[type='radio']:focus{
+        outline:2px solid transparent;outline-offset:2px;
+        --tw-ring-inset:var(--tw-empty,/*!*/ /*!*/);--tw-ring-offset-width:2px;--tw-ring-offset-color:#fff;--tw-ring-color:#2563eb;
+        --tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+        --tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+        box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}
+    [type='checkbox']:checked,[type='radio']:checked{
+        border-color:transparent;background-color:currentColor;background-size:100% 100%;background-position:center;background-repeat:no-repeat}
+    [type='checkbox']:checked{
+        background-image:url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e")}
+    [type='radio']:checked{
+        background-image:url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e")}
+    [type='checkbox']:checked:hover,[type='checkbox']:checked:focus,[type='radio']:checked:hover,[type='radio']:checked:focus{
+        border-color:transparent;background-color:currentColor}
+    [type='checkbox']:indeterminate{
+        background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3e%3cpath stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 8h8'/%3e%3c/svg%3e");
+        border-color:transparent;background-color:currentColor;background-size:100% 100%;background-position:center;background-repeat:no-repeat}
+    [type='checkbox']:indeterminate:hover,[type='checkbox']:indeterminate:focus{border-color:transparent;background-color:currentColor}
+    [type='file']{background:unset;border-color:inherit;border-width:0;border-radius:0;padding:0;font-size:unset;line-height:inherit}
+    [type='file']:focus{outline:1px auto -webkit-focus-ring-color;}
+    [type='color']{height:2.4rem;padding:2px 3px}
+    [type='range']{height:2.4rem}
+    [type='button'],button[type='submit']{cursor:pointer}
+
+    @media (min-width: 640px) {
+        [type='text'],[type='email'],[type='url'],[type='password'],[type='number'],[type='date'],[type='datetime-local'],[type='month'],[type='week'],[type='search'],[type='tel'],[type='time'],[type='color'],[multiple],textarea,select {
+            font-size: .875rem;
+            line-height: 1.25rem;
+        }
+    }
+
+    /* dark mode autocomplete fields */
+    .dark input:-webkit-autofill,
+    .dark input:-webkit-autofill:hover,
+    .dark input:-webkit-autofill:focus,
+    .dark input:-webkit-autofill:active {
+        transition: background-color 5000s ease-in-out 0s;
+        -webkit-text-fill-color: #ffffff;
+    }
+    .dark input[data-autocompleted] {
+        background-color: transparent !important;
+    }
+
+    /* @tailwindcss/aspect css */
+    .aspect-h-9 {
+        --tw-aspect-h: 9;
+    }
+    .aspect-w-16 {
+        position: relative;
+        padding-bottom: calc(var(--tw-aspect-h) / var(--tw-aspect-w) * 100%);
+        --tw-aspect-w: 16;
+    }
+    .aspect-w-16 > * {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+}
+
+.svg-external {
+    color: #007bff;
+    background: url("data:image/svg+xml,%3Csvg width='1.25rem' height='1.25rem' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none'%3E%3Cpath d='M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4M14 4h6m0 0v6m0-6L10 14' stroke='%23007bff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/svg%3E") no-repeat bottom right;
+    padding-right: 1.35rem;
+}
+.svg-external:hover {
+    text-decoration: underline;
+}
+
+/* ============================================
+   Dark Mode Prose Styles for Markdown Content
+   ============================================ */
+
+/* Base prose text color */
+.dark .prose {
+    color: #d1d5db; /* gray-300 */
+}
+
+/* Headings */
+.dark .prose h1 {
+    color: #f9fafb; /* gray-50 */
+}
+.dark .prose h2 {
+    color: #f3f4f6; /* gray-100 */
+}
+.dark .prose h3 {
+    color: #f3f4f6; /* gray-100 */
+}
+.dark .prose h4 {
+    color: #e5e7eb; /* gray-200 */
+}
+.dark .prose h5 {
+    color: #e5e7eb; /* gray-200 */
+}
+.dark .prose h6 {
+    color: #e5e7eb; /* gray-200 */
+}
+
+/* Links */
+.dark .prose a {
+    color: #60a5fa; /* blue-400 */
+    text-decoration-color: #3b82f6; /* blue-500 */
+}
+.dark .prose a:hover {
+    color: #93c5fd; /* blue-300 */
+}
+.dark .prose a code {
+    color: #60a5fa; /* blue-400 */
+}
+
+/* Strong/Bold text */
+.dark .prose strong {
+    color: #f3f4f6; /* gray-100 */
+    font-weight: 600;
+}
+
+/* Emphasis/Italic */
+.dark .prose em {
+    color: #e5e7eb; /* gray-200 */
+}
+
+/* Inline code */
+.dark .prose code {
+    color: #f3f4f6; /* gray-100 */
+    background-color: #374151; /* gray-700 */
+    padding: 0.2em 0.4em;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+}
+.dark .prose code::before,
+.dark .prose code::after {
+    content: none;
+}
+
+/* Code blocks */
+.dark .prose pre {
+    background-color: #1f2937; /* gray-800 */
+    color: #e5e7eb; /* gray-200 */
+    border: 1px solid #374151; /* gray-700 */
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+}
+.dark .prose pre code {
+    background-color: transparent;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+    border-radius: 0;
+}
+
+/* Blockquotes */
+.dark .prose blockquote {
+    color: #d1d5db; /* gray-300 */
+    border-left-color: #4b5563; /* gray-600 */
+    background-color: #1f2937; /* gray-800 */
+    font-style: italic;
+}
+.dark .prose blockquote p:first-of-type::before,
+.dark .prose blockquote p:last-of-type::after {
+    color: #6b7280; /* gray-500 */
+}
+
+/* Horizontal rules */
+.dark .prose hr {
+    border-color: #4b5563; /* gray-600 */
+}
+
+/* Lists */
+.dark .prose ul > li::marker {
+    color: #9ca3af; /* gray-400 */
+}
+.dark .prose ol > li::marker {
+    color: #9ca3af; /* gray-400 */
+}
+.dark .prose ul ul,
+.dark .prose ul ol,
+.dark .prose ol ul,
+.dark .prose ol ol {
+    color: #d1d5db; /* gray-300 */
+}
+
+/* Tables */
+.dark .prose table {
+    border-color: #4b5563; /* gray-600 */
+}
+.dark .prose thead {
+    color: #f3f4f6; /* gray-100 */
+    border-bottom-color: #6b7280; /* gray-500 */
+    background-color: #374151; /* gray-700 */
+}
+.dark .prose thead th {
+    color: #f3f4f6; /* gray-100 */
+    font-weight: 600;
+}
+.dark .prose tbody tr {
+    border-bottom-color: #374151; /* gray-700 */
+}
+.dark .prose tbody tr:hover {
+    background-color: #1f2937; /* gray-800 */
+}
+.dark .prose tbody td {
+    color: #d1d5db; /* gray-300 */
+}
+.dark .prose tfoot {
+    border-top-color: #6b7280; /* gray-500 */
+}
+.dark .prose tfoot td {
+    color: #d1d5db; /* gray-300 */
+}
+
+/* Images */
+.dark .prose img {
+    opacity: 0.9;
+}
+.dark .prose img:hover {
+    opacity: 1;
+}
+
+/* Figure captions */
+.dark .prose figcaption {
+    color: #9ca3af; /* gray-400 */
+}
+
+/* Kbd (keyboard input) */
+.dark .prose kbd {
+    background-color: #374151; /* gray-700 */
+    color: #f3f4f6; /* gray-100 */
+    border-color: #4b5563; /* gray-600 */
+    box-shadow: 0 0 0 1px #4b5563;
+}
+
+/* Mark (highlighted text) */
+.dark .prose mark {
+    background-color: #fbbf24; /* amber-400 */
+    color: #111827; /* gray-900 */
+}
+
+/* Abbreviations */
+.dark .prose abbr {
+    color: #e5e7eb; /* gray-200 */
+    border-bottom-color: #6b7280; /* gray-500 */
+}
+
+/* Lead paragraph */
+.dark .prose .lead {
+    color: #d1d5db; /* gray-300 */
+}
+
+/* Video */
+.dark .prose video {
+    opacity: 0.95;
+}
+
+/* Paragraph text */
+.dark .prose p {
+    color: #d1d5db; /* gray-300 */
+}
+
+/* Details/Summary */
+.dark .prose details {
+    background-color: #1f2937; /* gray-800 */
+    border-color: #4b5563; /* gray-600 */
+}
+.dark .prose summary {
+    color: #f3f4f6; /* gray-100 */
+}
+
+/* Definition lists */
+.dark .prose dt {
+    color: #f3f4f6; /* gray-100 */
+}
+.dark .prose dd {
+    color: #d1d5db; /* gray-300 */
+}
+
+/* Preformatted text */
+.dark .prose samp {
+    color: #e5e7eb; /* gray-200 */
+    background-color: #374151; /* gray-700 */
+}
+
+/* Subscript and superscript */
+.dark .prose sub,
+.dark .prose sup {
+    color: #d1d5db; /* gray-300 */
+}
