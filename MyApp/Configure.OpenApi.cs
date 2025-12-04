@@ -13,7 +13,7 @@ public class ConfigureOpenApi : IHostingStartup
                 services.AddEndpointsApiExplorer();
                 services.AddSwaggerGen();
                 services.AddServiceStackSwagger();
-                // services.AddBasicAuth<Data.ApplicationUser>();
+                services.AddBasicAuth<Data.ApplicationUser>();
                 // services.AddApiKeys();
                 // services.AddJwtAuth();
            

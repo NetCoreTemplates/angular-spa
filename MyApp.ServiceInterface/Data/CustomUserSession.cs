@@ -21,7 +21,6 @@ public class CustomUserSession : AuthUserSession
 public class AdditionalUserClaimsPrincipalFactory(
     UserManager<ApplicationUser> userManager,
     RoleManager<IdentityRole> roleManager,
-    IApiKeySource apiKeySource,
     IOptions<IdentityOptions> optionsAccessor)
     : UserClaimsPrincipalFactory<ApplicationUser,IdentityRole>(userManager, roleManager, optionsAccessor)
 {
@@ -35,15 +34,6 @@ public class AdditionalUserClaimsPrincipalFactory(
         if (user.ProfileUrl != null)
         {
             claims.Add(new Claim(JwtClaimTypes.Picture, user.ProfileUrl));
-        }
-        
-        // Add Users latest API Key to Auth Cookie (Allows [ValidateApiKey] with User Auth)
-        var latestApiKey = (await apiKeySource.GetApiKeysByUserIdAsync(user.Id))
-            .OrderByDescending(x => x.CreatedDate)
-            .FirstOrDefault();
-        if (latestApiKey != null)
-        {
-            claims.Add(new Claim(JwtClaimTypes.ApiKey, latestApiKey.Key));
         }
 
         identity.AddClaims(claims);
