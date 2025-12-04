@@ -109,7 +109,7 @@ export class TodoMvcComponent implements OnInit {
     }
 
     startEditing(todo: Todo): void {
-        this.editingTodoId = todo.id;
+        this.editingTodoId = todo.id!;
         this.editingTodoText = todo.text;
     }
 
@@ -131,7 +131,7 @@ export class TodoMvcComponent implements OnInit {
                 }
             });
         } else {
-            this.deleteTodo(todo.id);
+            this.deleteTodo(todo.id!);
         }
         this.editingTodoId = null;
     }

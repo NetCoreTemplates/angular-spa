@@ -21,7 +21,7 @@ export class MetadataService {
             userIcon: { svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#4a5565" d="M16 8a5 5 0 1 0 5 5a5 5 0 0 0-5-5"/><path fill="#4a5565" d="M16 2a14 14 0 1 0 14 14A14.016 14.016 0 0 0 16 2m7.993 22.926A5 5 0 0 0 19 20h-6a5 5 0 0 0-4.992 4.926a12 12 0 1 1 15.985 0"/></svg>` },
             tableIcon: { svg: `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><g fill='none' stroke='currentColor' stroke-width='1.5'><path d='M5 12v6s0 3 7 3s7-3 7-3v-6'/><path d='M5 6v6s0 3 7 3s7-3 7-3V6'/><path d='M12 3c7 0 7 3 7 3s0 3-7 3s-7-3-7-3s0-3 7-3Z'/></g></svg>` },
         });
-        this.loadMetadata({ olderThan:10*60*1000 }) // 10 minutes
+        this.loadMetadata({ olderThan:0 })
     }
 
     metadata = signal<AppMetadata|null>(null)
