@@ -90,15 +90,9 @@ if (app.Environment.IsDevelopment())
     app.MapViteHmr(nodeProxy);
     app.MapFallbackToNode(nodeProxy);
 
-    // Wait for Angular dev server to start
-    var timeout = TimeSpan.FromSeconds(60);
-    var started = DateTime.UtcNow;
-    while (DateTime.UtcNow - started < timeout)
-    {
-        if (IsPortAvailable(4200))
-            break;
-        Thread.Sleep(100);
-    }
+    // Wait for Angular Dev Server to start...
+    ExecUtils.RetryOnException(() => 
+        nodeProxy.Client.GetStringAsync("/").Wait(), timeOut:TimeSpan.FromSeconds(30));
 }
 else
 {
