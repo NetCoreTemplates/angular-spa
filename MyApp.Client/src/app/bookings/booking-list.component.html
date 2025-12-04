@@ -45,18 +45,6 @@
             {{ cost | currency }}
         </ng-template>
 
-        <ng-template #discountHeader>
-            Discount
-        </ng-template>
-        <ng-template #discount let-discount="discount">
-            @if (discount) {
-            <div class="flex items-end">
-                <app-icon class="w-5 h-5 mr-1" type="Coupon"></app-icon>
-                <preview-format [value]="discount.description"></preview-format>
-            </div>
-            }
-        </ng-template>
-
         <ng-template #cancelledHeader>
             Status
         </ng-template>
