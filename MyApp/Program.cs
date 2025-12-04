@@ -73,9 +73,9 @@ app.UseServiceStack(new AppHost(), options => {
 if (app.Environment.IsDevelopment())
 {
     // Start the Angular dev server if it's not running
-    var portAvailable = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties()
-        .GetActiveTcpListeners().All(x => x.Port != 4200);
-    if (portAvailable && nodeProxy.TryStartNode("../MyApp.Client", out var process))
+    bool IsPortAvailable(int port) => System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties()
+            .GetActiveTcpListeners().All(x => x.Port != port);
+    if (IsPortAvailable(4200) && nodeProxy.TryStartNode("../MyApp.Client", out var process))
     {
         app.Lifetime.ApplicationStopping.Register(() => {
             if (!process.HasExited)
@@ -89,7 +89,16 @@ if (app.Environment.IsDevelopment())
     app.UseWebSockets();
     app.MapViteHmr(nodeProxy);
     app.MapFallbackToNode(nodeProxy);
-    Thread.Sleep(200); // Wait for Node to start
+
+    // Wait for Angular dev server to start
+    var timeout = TimeSpan.FromSeconds(30);
+    var started = DateTime.UtcNow;
+    while (DateTime.UtcNow - started < timeout)
+    {
+        if (IsPortAvailable(4200))
+            break;
+        Thread.Sleep(100);
+    }
 }
 else
 {
