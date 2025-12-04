@@ -38,7 +38,7 @@ services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AdditionalUserC
 services.AddServiceStack(typeof(MyServices).Assembly);
 
 var app = builder.Build();
-var nodeProxy = new NodeProxy("http://127.0.0.1:4200") {
+var nodeProxy = new NodeProxy("http://localhost:4200") {
     Log = app.Logger
 };
 
@@ -72,11 +72,20 @@ app.UseServiceStack(new AppHost(), options => {
 // Proxy development HMR WebSocket and fallback routes to the Next server
 if (app.Environment.IsDevelopment())
 {
-    // Start the Next.js dev server if the Next.js lockfile does not exist
-    app.RunNodeProcess(nodeProxy,
-        lockFile: "../MyApp.Client/dist/lock",
-        workingDirectory: "../MyApp.Client");
-
+    // Start the Angular dev server if it's not running
+    var portAvailable = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties()
+        .GetActiveTcpListeners().All(x => x.Port != 4200);
+    if (portAvailable && nodeProxy.TryStartNode("../MyApp.Client", out var process))
+    {
+        app.Lifetime.ApplicationStopping.Register(() => {
+            if (!process.HasExited)
+            {
+                nodeProxy.Log.LogDebug("Terminating process: " + process.Id);
+                process.Kill(entireProcessTree: true);
+            }
+        });
+    }
+    
     app.UseWebSockets();
     app.MapViteHmr(nodeProxy);
     app.MapFallbackToNode(nodeProxy);
