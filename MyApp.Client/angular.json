@@ -57,6 +57,9 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "host": "127.0.0.1"
+          },
           "configurations": {
             "production": {
               "buildTarget": "MyApp.Client:build:production"
