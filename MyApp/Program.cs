@@ -91,7 +91,7 @@ if (app.Environment.IsDevelopment())
     app.MapFallbackToNode(nodeProxy);
 
     // Wait for Angular dev server to start
-    var timeout = TimeSpan.FromSeconds(30);
+    var timeout = TimeSpan.FromSeconds(60);
     var started = DateTime.UtcNow;
     while (DateTime.UtcNow - started < timeout)
     {
