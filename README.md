@@ -2,9 +2,9 @@
 
 A ServiceStack Angular SPA template combining .NET 10.0 backend with Angular 21 frontend. The project uses a layered architecture with clear separation between API, business logic, DTOs, and frontend.
 
-[![](https://raw.githubusercontent.com/ServiceStack/Assets/master/csharp-templates/angular-spa.png)](http://angular-spa.web-templates.io)
+![](https://github.com/ServiceStack/docs.servicestack.net/blob/main/MyApp/wwwroot/img/pages/templates/angular-spa.webp)
 
-> Browse [source code](https://github.com/NetCoreTemplates/angular-spa), view live demo [angular-spa.web-templates.io](http://angular-spa.web-templates.io) and install with [dotnet-new](https://docs.servicestack.net/dotnet-new):
+> Browse [source code](https://github.com/NetCoreTemplates/angular-spa), view live demo [angular-spa.web-templates.io](https://angular-spa.web-templates.io) and install with:
 
 ## Quick Start
 

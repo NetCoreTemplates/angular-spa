@@ -517,4 +517,4 @@ Configure `KAMAL_DEPLOY_HOST` in GitHub secrets for your hostname. Kamal config 
 
 ## Live Demo
 
-Template demo available at: http://angular-spa.web-templates.io
+Template demo available at: https://angular-spa.web-templates.io
