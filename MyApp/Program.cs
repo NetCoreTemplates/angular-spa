@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Sockets;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using MyApp.Data;
@@ -69,35 +70,16 @@ app.UseServiceStack(new AppHost(), options => {
     options.MapEndpoints();
 });
 
-// Proxy development HMR WebSocket and fallback routes to the Next server
 if (app.Environment.IsDevelopment())
 {
-    // Start the Angular dev server if it's not running
-    bool IsPortAvailable(int port) => System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties()
-            .GetActiveTcpListeners().All(x => x.Port != port);
-    if (IsPortAvailable(4200) && nodeProxy.TryStartNode("../MyApp.Client", out var process))
-    {
-        app.Lifetime.ApplicationStopping.Register(() => {
-            if (!process.HasExited)
-            {
-                nodeProxy.Log.LogDebug("Terminating process: " + process.Id);
-                process.Kill(entireProcessTree: true);
-            }
-        });
-    }
-    
+    app.RunNodeProcess(nodeProxy, "../MyApp.Client"); // Start Node if not running
     app.UseWebSockets();
-    app.MapViteHmr(nodeProxy);
-    app.MapFallbackToNode(nodeProxy);
-
-    // Wait for Angular Dev Server to start...
-    ExecUtils.RetryOnException(() => 
-        nodeProxy.Client.GetStringAsync("/").Wait(), timeOut:TimeSpan.FromSeconds(30));
+    app.MapViteHmr(nodeProxy); // Proxy HMR WebSocket requests 
+    app.MapFallbackToNode(nodeProxy); // Fallback to Node dev server in development
 }
 else
-{
-    // Map fallback to index.html in production (MyApp.Client/dist > wwwroot)
-    app.MapFallbackToFile("index.html");
+{    
+    app.MapFallbackToFile("index.html"); // Fallback to index.html in production (MyApp.Client/dist > wwwroot)
 }
 
 app.Run();
