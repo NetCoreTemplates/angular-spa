@@ -18,14 +18,7 @@ dotnet watch
 cd MyApp.Client && npm run dtos
 ```
 
-**Frontend (Angular SPA):**
-```bash
-# Run dev server with HMR (from MyApp.Client directory)
-npm run dev
-# Dev server at http://localhost:4200
-```
-
-**Tailwind CSS:**
+**Tailwind CSS (for Razor Pages):**
 ```bash
 # Watch mode for styling (from MyApp directory)
 npm run ui:dev
@@ -35,16 +28,21 @@ npm run ui:build
 ```
 
 **Full development setup:**
-1. Terminal 1: `cd MyApp && dotnet run` (backend)
-2. Terminal 2: `cd MyApp.Client && npm run dev` (frontend)
-3. Terminal 3: `cd MyApp && npm run ui:dev` (Tailwind watch)
+Run .NET backend, Razor Pages and Node Vite dev server in parallel:
+```bash
+cd MyApp && dotnet watch
+```
+
+**Using tailwind in new Razor Pages:**
+
+Terminal 2: `cd MyApp && npm run ui:dev` (Tailwind watch)
 
 ### Testing
 
 **Backend:**
 ```bash
 # Run all .NET tests
-dotnet test MyApp.slnx
+cd MyApp.Tests && dotnet test
 ```
 
 **Frontend:**
@@ -92,7 +90,7 @@ npx okai rm Table.d.ts
 - Hot Module Replacement (HMR) enabled via WebSocket proxying using `MapNotFoundToNode`, `MapViteHmr`, `RunNodeProcess`, `MapFallbackToNode` in [Program.cs](MyApp/Program.cs)
 
 **Production Mode:**
-- Angular builds React app to `MyApp.Client/dist/`, which is copied to `MyApp/wwwroot/` when published
+- Angular builds app to `MyApp.Client/dist/`, which is copied to `MyApp/wwwroot/` when published
 - ASP.NET Core serves static files directly from `wwwroot` - no Node.js required
 - Fallback to `index.html` for client-side routing
 
@@ -112,13 +110,13 @@ This pattern keeps [Program.cs](MyApp/Program.cs) clean and separates concerns. 
 ### Project Structure
 
 ```
-MyApp/                         # .NET Backend (hosts both .NET and Vite React)
+MyApp/                         # .NET Backend (hosts both .NET and Angular build output)
 ├── Configure.*.cs             # Modular startup configuration
 ├── Migrations/                # EF Core Identity migrations + OrmLite app migrations
 ├── Pages/                     # Identity Auth Razor Pages
 └── wwwroot/                   # Production static files (from MyApp.Client/dist)
 
-MyApp.Client/                  # React Frontend
+MyApp.Client/                  # Angular Frontend
 ├── src/
 │   ├── app/                   # Angular components and pages
 │   ├── services/              # Shared services including auth (signal-based)
@@ -471,11 +469,11 @@ Using `apiForm` is required for multipart/form-data File Uploads.
 - `/ui/*` → ServiceStack API Explorer
 - `/admin-ui/*` → ServiceStack Admin UI (requires Admin role)
 - `/types/typescript` → ServiceStack .NET API TypeScript DTOs (for dtos.ts)
-- All other routes → React SPA (via fallback in dev/prod)
+- All other routes → Angular SPA (via fallback in dev/prod)
 
 ### Razor Pages Integration
 
-The template includes Razor Pages for Identity UI (`/Identity` routes) that coexist with the React SPA. These use Tailwind CSS compiled from `MyApp/tailwind.input.css` to `MyApp/wwwroot/css/app.css`.
+The template includes Razor Pages for Identity UI (`/Identity` routes) that coexist with the Angular SPA. These use Tailwind CSS compiled from `MyApp/tailwind.input.css` to `MyApp/wwwroot/css/app.css`.
 
 ### Environment Variables
 
@@ -491,7 +489,7 @@ Configured in [Configure.BackgroundJobs.cs](MyApp/Configure.BackgroundJobs.cs) u
 2. **Make backend changes:** Edit C# files in `MyApp.ServiceModel` or `MyApp.ServiceInterface`
 3. **Restart .NET Server**
 4. **Regenerate DTOs:** `cd MyApp.Client && npm run dtos`
-5. **Make frontend changes:** Edit React files in `MyApp.Client/src`
+5. **Make frontend changes:** Edit Angular files in `MyApp.Client/src`
 6. **Add new CRUD feature:**
    - `npx okai init Feature`
    - Edit `MyApp.ServiceModel/Feature.d.ts`
