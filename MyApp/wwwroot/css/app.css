@@ -1,4 +1,4 @@
-/*! tailwindcss v4.1.15 | MIT License | https://tailwindcss.com */
+/*! tailwindcss v4.1.17 | MIT License | https://tailwindcss.com */
 @layer properties;
 @layer theme, base, components, utilities;
 @layer theme {
@@ -254,9 +254,7 @@
     ::placeholder {
       color: currentcolor;
       @supports (color: color-mix(in lab, red, red)) {
-        & {
-          color: color-mix(in oklab, currentcolor 50%, transparent);
-        }
+        color: color-mix(in oklab, currentcolor 50%, transparent);
       }
     }
   }
@@ -998,17 +996,13 @@
   .bg-gray-500\/75 {
     background-color: color-mix(in srgb, oklch(55.1% 0.027 264.364) 75%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
-      & {
-        background-color: color-mix(in oklab, var(--color-gray-500) 75%, transparent);
-      }
+      background-color: color-mix(in oklab, var(--color-gray-500) 75%, transparent);
     }
   }
   .bg-gray-900\/80 {
     background-color: color-mix(in srgb, oklch(21% 0.034 264.665) 80%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
-      & {
-        background-color: color-mix(in oklab, var(--color-gray-900) 80%, transparent);
-      }
+      background-color: color-mix(in oklab, var(--color-gray-900) 80%, transparent);
     }
   }
   .bg-green-50 {
@@ -1470,9 +1464,7 @@
   .ring-black\/5 {
     --tw-ring-color: color-mix(in srgb, #000 5%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
-      & {
-        --tw-ring-color: color-mix(in oklab, var(--color-black) 5%, transparent);
-      }
+      --tw-ring-color: color-mix(in oklab, var(--color-black) 5%, transparent);
     }
   }
   .ring-indigo-500 {
@@ -3315,7 +3307,7 @@
   [type='range'] {
     height: 2.4rem;
   }
-  [type='button'],button[type='submit'] {
+  [type='button'],button[type='submit'],button[href] {
     cursor: pointer;
   }
   @media (min-width: 640px) {
