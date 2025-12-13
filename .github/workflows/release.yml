@@ -15,6 +15,7 @@ on:
 env:
   DOCKER_BUILDKIT: 1
   SERVICESTACK_LICENSE: ${{ secrets.SERVICESTACK_LICENSE }}
+  APPSETTINGS_JSON: ${{ secrets.APPSETTINGS_JSON }}
   KAMAL_DEPLOY_IP: ${{ secrets.KAMAL_DEPLOY_IP }}
   KAMAL_DEPLOY_HOST: ${{ secrets.KAMAL_DEPLOY_HOST }}
   KAMAL_REGISTRY_USERNAME: ${{ github.actor }}
@@ -28,12 +29,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
+      - name: Encode APPSETTINGS_JSON for runtime
+        if: env.APPSETTINGS_JSON != null
+        run: |
+          # Base64 encode to avoid shell/YAML quoting issues; keep as a single env var.
+          b64=$(printf '%s' "$APPSETTINGS_JSON" | base64 -w0)
+          echo "APPSETTINGS_JSON_BASE64=$b64" >> $GITHUB_ENV
+
       - name: Set up environment variables
         run: |
-          echo "image_repository_name=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-          echo "repository_name=$(echo ${{ github.repository }} | cut -d '/' -f 2)" >> $GITHUB_ENV
-          echo "repository_name_lower=$(echo ${{ github.repository }} | cut -d '/' -f 2 | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-          echo "org_name=$(echo ${{ github.repository }} | cut -d '/' -f 1)" >> $GITHUB_ENV
+          echo "IMAGE=ghcr.io/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+          repo_name="$(echo ${{ github.repository }} | cut -d '/' -f 2)"
+          echo "SERVICE=$(echo $repo_name | tr '[:upper:]' '[:lower:]' | tr '.' '-')" >> $GITHUB_ENV
           if find . -maxdepth 2 -type f -name "Configure.Db.Migrations.cs" | grep -q .; then
             echo "HAS_MIGRATIONS=true" >> $GITHUB_ENV
           else
@@ -73,14 +80,14 @@ jobs:
       - name: Ensure directories exist with correct permissions
         run: |
           echo "Creating directories with correct permissions"
-          kamal server exec "mkdir -p /opt/docker/${{ env.repository_name }}/App_Data /opt/docker/${{ env.repository_name }}/initdb.d"
+          kamal server exec "mkdir -p /opt/docker/${{ env.SERVICE }}/App_Data /opt/docker/${{ env.SERVICE }}/initdb.d"
 
           echo "Setting app file permissions"
-          kamal server exec "chown -R 1654:1654 /opt/docker/${{ env.repository_name }}/App_Data /opt/docker/${{ env.repository_name }}/initdb.d"
+          kamal server exec "chown -R 1654:1654 /opt/docker/${{ env.SERVICE }}/App_Data /opt/docker/${{ env.SERVICE }}/initdb.d"
 
       - name: Check if first run and execute kamal app boot if necessary
         run: |
-          FIRST_RUN_FILE="~/first-run/${{ env.repository_name }}"
+          FIRST_RUN_FILE="~/first-run/${{ env.SERVICE }}"
           if ! kamal server exec -q "test -f $FIRST_RUN_FILE"; then
             kamal server exec -q "mkdir -p ~/first-run && touch $FIRST_RUN_FILE" || true
 
@@ -88,7 +95,7 @@ jobs:
               echo "Initializing DB with INIT_DB_SQL secret..."
               # Save the SQL content to a temporary file
               echo "${{ env.INIT_DB_SQL }}" > init-db.sql
-              cat init-db.sql | kamal server exec -i "cat > /opt/docker/${{ env.repository_name }}/initdb.d/${{ env.repository_name }}.sql" && rm init-db.sql || true
+              cat init-db.sql | kamal server exec -i "cat > /opt/docker/${{ env.SERVICE }}/initdb.d/${{ env.SERVICE }}.sql" && rm init-db.sql || true
             fi
             # Start all kamal accessories
             kamal accessory boot all || true
@@ -101,13 +108,13 @@ jobs:
 
       - name: Verify file permissions before deploy
         run: |
-          kamal server exec --no-interactive "chown -R 1654:1654 /opt/docker/${{ env.repository_name }}/App_Data /opt/docker/${{ env.repository_name }}/initdb.d"
+          kamal server exec --no-interactive "chown -R 1654:1654 /opt/docker/${{ env.SERVICE }}/App_Data /opt/docker/${{ env.SERVICE }}/initdb.d"
 
       - name: Deploy with Kamal
         run: |
           kamal lock release -v
           kamal server exec --no-interactive 'echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin'
-          kamal server exec --no-interactive 'docker pull ghcr.io/${{ env.image_repository_name }}:latest'
+          kamal server exec --no-interactive 'docker pull ${{ env.IMAGE }}:latest'
           kamal deploy -P --version latest
 
       - name: Migration

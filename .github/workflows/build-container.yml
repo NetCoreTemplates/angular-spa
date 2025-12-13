@@ -27,19 +27,17 @@ jobs:
 
       - name: Set up environment variables
         run: |
-          echo "image_repository_name=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-          echo "repository_name=$(echo ${{ github.repository }} | cut -d '/' -f 2)" >> $GITHUB_ENV
-          echo "repository_name_lower=$(echo ${{ github.repository }} | cut -d '/' -f 2 | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-          echo "org_name=$(echo ${{ github.repository }} | cut -d '/' -f 1)" >> $GITHUB_ENV
+          echo "IMAGE=ghcr.io/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+          repo_name="$(echo ${{ github.repository }} | cut -d '/' -f 2)"
 
-          # Set SERVICE_LABEL: derive from GITHUB_REPOSITORY (replace dots with dashes)
-          echo "SERVICE_LABEL=$(echo ${{ github.repository }} | cut -d '/' -f 2 | tr '.' '-')" >> $GITHUB_ENV
+          # Set SERVICE: derive from repo name (replace dots with dashes)
+          echo "SERVICE=$(echo $repo_name | tr '[:upper:]' '[:lower:]' | tr '.' '-')" >> $GITHUB_ENV
 
           # Set KAMAL_DEPLOY_HOST: use secret if available, otherwise use repository name
           if [ -n "${{ secrets.KAMAL_DEPLOY_HOST }}" ]; then
             DEPLOY_HOST="${{ secrets.KAMAL_DEPLOY_HOST }}"
           else
-            DEPLOY_HOST="$(echo ${{ github.repository }} | cut -d '/' -f 2)"
+            DEPLOY_HOST="$repo_name"
           fi
 
           # Validate KAMAL_DEPLOY_HOST contains at least one '.'
@@ -56,7 +54,7 @@ jobs:
           KAMAL_DEPLOY_IP: ${{ secrets.KAMAL_DEPLOY_IP }}
         if: env.KAMAL_DEPLOY_IP != null
         run: |
-          sed -i 's#<ContainerLabel Include="service" Value="my-app" />#<ContainerLabel Include="service" Value="${{ env.repository_name_lower }}" />#g' MyApp/MyApp.csproj
+          sed -i 's#<ContainerLabel Include="service" Value="my-app" />#<ContainerLabel Include="service" Value="${{ env.SERVICE }}" />#g' MyApp/MyApp.csproj
 
       - name: Check for Client directory and package.json
         id: check_client
@@ -83,20 +81,6 @@ jobs:
         working-directory: ./MyApp.Client
         run: npm run build
 
-      - name: Install x tool
-        run: dotnet tool install -g x
-
-      - name: Apply Production AppSettings
-        env:
-          APPSETTINGS_PATCH: ${{ secrets.APPSETTINGS_PATCH }}      
-        if: env.APPSETTINGS_PATCH != null
-        working-directory: ./MyApp
-        run: |
-          cat <<EOF >> appsettings.json.patch
-          ${{ secrets.APPSETTINGS_PATCH }}
-          EOF
-          x patch appsettings.json.patch
-
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -112,10 +96,13 @@ jobs:
       - name: Build and push Docker image
         env:
           SERVICESTACK_LICENSE: ${{ secrets.SERVICESTACK_LICENSE }}
-          KAMAL_DEPLOY_HOST: ${{ secrets.KAMAL_DEPLOY_HOST }}
+          KAMAL_DEPLOY_HOST: ${{ env.KAMAL_DEPLOY_HOST }}
+          SERVICE: ${{ env.SERVICE }}
         run: |
-          dotnet publish --os linux --arch x64 -c Release \
-            -p:ContainerRepository=${{ env.image_repository_name }} \
-            -p:ContainerRegistry=ghcr.io -p:ContainerImageTags=latest \
-            -p:ContainerPort=80 \
-            -p:ContainerEnvironmentVariable="SERVICESTACK_LICENSE=${{ env.SERVICESTACK_LICENSE }}"
+          docker build \
+            --build-arg SERVICESTACK_LICENSE="$SERVICESTACK_LICENSE" \
+            --build-arg KAMAL_DEPLOY_HOST="$KAMAL_DEPLOY_HOST" \
+            --build-arg SERVICE="$SERVICE" \
+            -t ${{ env.IMAGE }}:latest \
+            -f Dockerfile .
+          docker push ${{ env.IMAGE }}:latest
