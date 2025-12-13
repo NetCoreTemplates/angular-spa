@@ -96,13 +96,10 @@ jobs:
       - name: Build and push Docker image
         env:
           SERVICESTACK_LICENSE: ${{ secrets.SERVICESTACK_LICENSE }}
-          KAMAL_DEPLOY_HOST: ${{ env.KAMAL_DEPLOY_HOST }}
-          SERVICE: ${{ env.SERVICE }}
+          KAMAL_DEPLOY_HOST: ${{ secrets.KAMAL_DEPLOY_HOST }}
         run: |
-          docker build \
-            --build-arg SERVICESTACK_LICENSE="$SERVICESTACK_LICENSE" \
-            --build-arg KAMAL_DEPLOY_HOST="$KAMAL_DEPLOY_HOST" \
-            --build-arg SERVICE="$SERVICE" \
-            -t ${{ env.IMAGE }}:latest \
-            -f Dockerfile .
-          docker push ${{ env.IMAGE }}:latest
+          dotnet publish --os linux --arch x64 -c Release \
+            -p:ContainerRepository=${{ env.IMAGE }} \
+            -p:ContainerRegistry=ghcr.io -p:ContainerImageTags=latest \
+            -p:ContainerPort=80 \
+            -p:ContainerEnvironmentVariable="SERVICESTACK_LICENSE=${{ env.SERVICESTACK_LICENSE }}"
