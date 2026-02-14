@@ -29,5 +29,5 @@ public class AppHost() : AppHostBase("MyApp"), IHostingStartup
     
     // TODO: Replace with your own License Key. FREE Individual or OSS License available from: https://servicestack.net/free
     public static void RegisterKey() =>
-        ServiceStack.Licensing.RegisterLicense("OSS BSD-3-Clause 2025 https://github.com/NetCoreTemplates/nextjs fikwwuuSWXcMlSp9HNi2aWOqg+XskqXNG/2epBNhPeQ4zEddXhxSFlFwv3Rfvr74nB5kaGPVvA1sY6MgfMkHYngn8FSLnDZPXUtCt54N5hEen1mKPxTIAPJjBGjWNSP+vccFGl4mpbpxjmpZ8+eKcAuzvMuWa3UqZFpV/49Buis=");
+        ServiceStack.Licensing.RegisterLicense("OSS BSD-3-Clause 2026 https://github.com/ServiceStack/ServiceStack O/YkmuxTrsTH+YGs8I9+/ipPvS5c8YIvTBsxtfB5bzusvWEclq+tyFbI54K152sn5sv2Z2q1IH6JerY0l76YhIxmCyuz5q99my5T2zUNl4IRuFHfO7226sPIOxH6G4+X82k2JHL+O0wJzqrpLN52+z17SZK95tkfdKkx6b+79c4=");
 }
