@@ -15,8 +15,9 @@ public class ConfigureDbMigrations : IHostingStartup
 {
     public void Configure(IWebHostBuilder builder) => builder
         .ConfigureAppHost(appHost => {
-            var migrator = new Migrator(appHost.Resolve<IDbConnectionFactory>(), typeof(Migration1000).Assembly);
-            AppTasks.Register("migrate", _ =>
+            var dbFactory = appHost.Resolve<IDbConnectionFactory>();
+            var migrator = new Migrator(dbFactory, typeof(Migration1000).Assembly);
+            void RunMigrations()
             {
                 var log = appHost.GetApplicationServices().GetRequiredService<ILogger<ConfigureDbMigrations>>();
 
@@ -41,10 +42,21 @@ public class ConfigureDbMigrations : IHostingStartup
 
                 log.LogInformation("Running OrmLite Migrations...");
                 migrator.Run();
-            });
+            }
+            AppTasks.Register("migrate", _ => RunMigrations());
             AppTasks.Register("migrate.revert", args => migrator.Revert(args[0]));
             AppTasks.Register("migrate.rerun", args => migrator.Rerun(args[0]));
             AppTasks.Run();
+
+            // To ensure there's a valid schema before starting, check for an empty database and run migrations if necessary.
+            // Applying later migrations stays a deliberate release step through the migrate app task.
+            using var db = dbFactory.Open();
+            if (!db.TableExists<ServiceModel.Booking>())
+            {
+                appHost.GetApplicationServices().GetRequiredService<ILogger<ConfigureDbMigrations>>()
+                    .LogInformation("Empty database detected; bootstrapping schemas and reference data...");
+                RunMigrations();
+            }
         });
 
     private async Task AddSeedUsers(IServiceProvider services)

@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "postinstall": "npm run migrate && node postinstall.js",
+        "postinstall": "node postinstall.js",
         "dtos": "cd ../MyApp.Client && npx get-dtos ts",
         "dev": "dotnet watch",
         "ui:dev": "tailwindcss -i ./tailwind.input.css -o ./wwwroot/css/app.css --watch",
