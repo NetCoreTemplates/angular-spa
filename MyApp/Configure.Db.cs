@@ -16,6 +16,8 @@ public class ConfigureDb : IHostingStartup
                                    ?? "DataSource=App_Data/app.db;Cache=Shared";
             
             services.AddOrmLite(options => options.UseSqlite(connectionString));
+            // Retry deadlocks, throttling and lost connections on PostgreSQL, SQL Server and MySQL (SQLite isn't retried)
+            OrmLiteConfig.RetryPolicy = OrmLiteRetry.Exponential(maxRetries: 3);
 
             // $ dotnet ef migrations add CreateIdentitySchema
             // $ dotnet ef database update
@@ -25,6 +27,9 @@ public class ConfigureDb : IHostingStartup
             });
             
             // Enable built-in Database Admin UI at /admin-ui/database
-            services.AddPlugin(new AdminDatabaseFeature());
+            services.AddPlugin(new AdminDatabaseFeature {
+                // Log differences between data models and their tables on startup
+                LogSchemaDiff = context.HostingEnvironment.IsDevelopment(),
+            });
         });
 }
